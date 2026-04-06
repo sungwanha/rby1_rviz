@@ -1,0 +1,51 @@
+[0.007s] Invoking command in '/home/hsw/rby1_rviz/build/rby1_teleop_cpp': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hsw/rby1_rviz -DCMAKE_INSTALL_PREFIX=/home/hsw/rby1_rviz/install/rby1_teleop_cpp
+[0.168s] -- The C compiler identification is GNU 11.4.0
+[0.280s] -- The CXX compiler identification is GNU 11.4.0
+[0.285s] -- Detecting C compiler ABI info
+[0.363s] -- Detecting C compiler ABI info - done
+[0.372s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.374s] -- Detecting C compile features
+[0.375s] -- Detecting C compile features - done
+[0.378s] -- Detecting CXX compiler ABI info
+[0.452s] -- Detecting CXX compiler ABI info - done
+[0.456s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.456s] -- Detecting CXX compile features
+[0.457s] -- Detecting CXX compile features - done
+[0.463s] -- Found ament_cmake: 1.3.11 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.604s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[0.684s] -- Found rclcpp: 16.0.12 (/opt/ros/humble/share/rclcpp/cmake)
+[0.724s] -- Found rosidl_generator_c: 3.1.6 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.727s] -- Found rosidl_adapter: 3.1.6 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.734s] -- Found rosidl_generator_cpp: 3.1.6 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.746s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.756s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.785s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.787s] -- Found rmw_cyclonedds_cpp: 1.3.4 (/opt/ros/humble/share/rmw_cyclonedds_cpp/cmake)
+[0.805s] -- Using RMW implementation 'rmw_cyclonedds_cpp' as default
+[0.811s] -- Looking for pthread.h
+[0.891s] -- Looking for pthread.h - found
+[0.892s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[0.980s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[0.981s] -- Found Threads: TRUE  
+[1.032s] -- Found sensor_msgs: 4.9.0 (/opt/ros/humble/share/sensor_msgs/cmake)
+[1.054s] -- Found tf2_ros: 0.25.13 (/opt/ros/humble/share/tf2_ros/cmake)
+[1.127s] [31mCMake Error at CMakeLists.txt:18 (find_package):
+[1.128s]   By not providing "Findpinocchio.cmake" in CMAKE_MODULE_PATH this project
+[1.128s]   has asked CMake to find a package configuration file provided by
+[1.128s]   "pinocchio", but CMake did not find one.
+[1.128s] 
+[1.128s]   Could not find a package configuration file provided by "pinocchio" with
+[1.128s]   any of the following names:
+[1.128s] 
+[1.128s]     pinocchioConfig.cmake
+[1.128s]     pinocchio-config.cmake
+[1.128s] 
+[1.128s]   Add the installation prefix of "pinocchio" to CMAKE_PREFIX_PATH or set
+[1.128s]   "pinocchio_DIR" to a directory containing one of the above files.  If
+[1.128s]   "pinocchio" provides a separate development package or SDK, be sure it has
+[1.128s]   been installed.
+[1.128s] 
+[1.128s] [0m
+[1.128s] -- Configuring incomplete, errors occurred!
+[1.128s] See also "/home/hsw/rby1_rviz/build/rby1_teleop_cpp/CMakeFiles/CMakeOutput.log".
+[1.133s] Invoked command in '/home/hsw/rby1_rviz/build/rby1_teleop_cpp' returned '1': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hsw/rby1_rviz -DCMAKE_INSTALL_PREFIX=/home/hsw/rby1_rviz/install/rby1_teleop_cpp

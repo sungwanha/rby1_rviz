@@ -1,0 +1,11 @@
+[0.008s] Invoking command in '/home/hsw/rby1_rviz/build/rby1_teleop_cpp': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/hsw/rby1_rviz/build/rby1_teleop_cpp -- -j20 -l20
+[0.048s] [35m[1mConsolidate compiler generated dependencies of target teleop_ik_node[0m
+[0.072s] [ 50%] [32mBuilding CXX object CMakeFiles/teleop_ik_node.dir/teleop_ik.cpp.o[0m
+[0.186s] [01m[K/home/hsw/rby1_rviz/teleop_ik.cpp:6:10:[m[K [01;31m[Kfatal error: [m[Kstd_srvs/srv/set_bool.hpp: No such file or directory
+[0.186s]     6 | #include [01;31m[K<std_srvs/srv/set_bool.hpp>[m[K
+[0.186s]       |          [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[0.186s] compilation terminated.
+[0.192s] gmake[2]: *** [CMakeFiles/teleop_ik_node.dir/build.make:76: CMakeFiles/teleop_ik_node.dir/teleop_ik.cpp.o] Error 1
+[0.192s] gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/teleop_ik_node.dir/all] Error 2
+[0.192s] gmake: *** [Makefile:146: all] Error 2
+[0.194s] Invoked command in '/home/hsw/rby1_rviz/build/rby1_teleop_cpp' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/hsw/rby1_rviz/build/rby1_teleop_cpp -- -j20 -l20

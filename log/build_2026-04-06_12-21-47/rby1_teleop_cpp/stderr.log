@@ -1,0 +1,22 @@
+[33mCMake Warning at /opt/openrobots/lib/cmake/hpp-fcl/hpp-fclConfig.cmake:4 (message):
+  Please update your CMake from 'hpp-fcl' to 'coal', or define
+  COAL_DISABLE_HPP_FCL_WARNINGS
+Call Stack (most recent call first):
+  /usr/share/cmake-3.22/Modules/CMakeFindDependencyMacro.cmake:47 (find_package)
+  /opt/openrobots/lib/cmake/pinocchio/pinocchioConfig.cmake:161 (find_dependency)
+  CMakeLists.txt:21 (find_package)
+
+[0m
+[31mCMake Error at CMakeLists.txt:25 (add_executable):
+  Target "teleop_ik_node" links to target "sensor_msgs::sensor_msgs" but the
+  target was not found.  Perhaps a find_package() call is missing for an
+  IMPORTED target, or an ALIAS target is missing?
+
+[0m
+[31mCMake Error at CMakeLists.txt:25 (add_executable):
+  Target "teleop_ik_node" links to target "std_msgs::std_msgs" but the target
+  was not found.  Perhaps a find_package() call is missing for an IMPORTED
+  target, or an ALIAS target is missing?
+
+[0m
+[0mCMake Generate step failed.  Build files cannot be regenerated correctly.[0m

@@ -1,0 +1,507 @@
+[0.000000] (-) TimerEvent: {}
+[0.000399] (rby1_teleop_cpp) JobQueued: {'identifier': 'rby1_teleop_cpp', 'dependencies': OrderedDict()}
+[0.000455] (rby1_teleop_cpp) JobStarted: {'identifier': 'rby1_teleop_cpp'}
+[0.005058] (rby1_teleop_cpp) JobProgress: {'identifier': 'rby1_teleop_cpp', 'progress': 'cmake'}
+[0.006247] (rby1_teleop_cpp) JobProgress: {'identifier': 'rby1_teleop_cpp', 'progress': 'build'}
+[0.006290] (rby1_teleop_cpp) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/hsw/rby1_rviz/build/rby1_teleop_cpp', '--', '-j20', '-l20'], 'cwd': '/home/hsw/rby1_rviz/build/rby1_teleop_cpp', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('PYTHON_BASIC_REPL', '1'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('LANGUAGE', 'en_US:en'), ('USER', 'hsw'), ('LC_TIME', 'ko_KR.UTF-8'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/openrobots/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/hsw'), ('CHROME_DESKTOP', 'code.desktop'), ('TERM_PROGRAM_VERSION', '1.107.1'), ('DESKTOP_SESSION', 'ubuntu-xorg'), ('NVM_BIN', '/home/hsw/.nvm/versions/node/v24.3.0/bin'), ('NVM_INC', '/home/hsw/.nvm/versions/node/v24.3.0/include/node'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('LC_MONETARY', 'ko_KR.UTF-8'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('MANAGERPID', '2712'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('SYSTEMD_EXEC_PID', '3259'), ('BUNDLED_DEBUGPY_PATH', '/home/hsw/.vscode/extensions/ms-python.debugpy-2025.18.0-linux-x64/bundled/libs/debugpy'), ('VSCODE_PYTHON_AUTOACTIVATE_GUARD', '1'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '4415'), ('NVM_DIR', '/home/hsw/.nvm'), ('COLCON_PREFIX_PATH', '/home/hsw/rby1_rviz/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'fcitx'), ('LOGNAME', 'hsw'), ('JOURNAL_STREAM', '8:27806'), ('_', '/home/hsw/.local/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('GEMINI_CLI_IDE_WORKSPACE_PATH', '/home/hsw/rby1_rviz'), ('USERNAME', 'hsw'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '0'), ('GEMINI_CLI_IDE_SERVER_PORT', '38899'), ('WINDOWPATH', '2'), ('PATH', '/home/hsw/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/hsw/.config/Code/User/globalStorage/github.copilot-chat/copilotCli:/home/hsw/.local/bin:/home/hsw/.nvm/versions/node/v24.3.0/bin:/opt/ros/humble/bin:/home/hsw/.cargo/bin:/home/hsw/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/hsw/.vscode/extensions/ms-python.debugpy-2025.18.0-linux-x64/bundled/scripts/noConfigScripts'), ('SESSION_MANAGER', 'local/hsw-Legion-5-15IRX9:@/tmp/.ICE-unix/3226,unix/hsw-Legion-5-15IRX9:/tmp/.ICE-unix/3226'), ('INVOCATION_ID', '63daceb789194f19b72e369c50bbee8c'), ('PAPERSIZE', 'a4'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'ko_KR.UTF-8'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'x11'), ('DISPLAY', ':0'), ('VSCODE_DEBUGPY_ADAPTER_ENDPOINTS', '/home/hsw/.vscode/extensions/ms-python.debugpy-2025.18.0-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-e8334eab54c29228.txt'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('PYTHONSTARTUP', '/home/hsw/.config/Code/User/workspaceStorage/98d29c7c6cd006f5ddc200a9da06ddb3/ms-python.python/pythonrc.py'), ('LC_TELEPHONE', 'ko_KR.UTF-8'), ('RMW_IMPLEMENTATION', 'rmw_cyclonedds_cpp'), ('XMODIFIERS', '@im=fcitx'), ('XDG_SESSION_DESKTOP', 'ubuntu-xorg'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-cdfa96f802.sock'), ('TERM_PROGRAM', 'vscode'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/hsw/rby1_rviz/install/rby1_teleop_cpp:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LC_NAME', 'ko_KR.UTF-8'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu-xorg'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'ko_KR.UTF-8'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('LC_IDENTIFICATION', 'ko_KR.UTF-8'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('QT_IM_MODULE', 'fcitx'), ('GEMINI_CLI_IDE_AUTH_TOKEN', '2242a927-13a4-4984-9e74-e63ca14dfb09'), ('PWD', '/home/hsw/rby1_rviz/build/rby1_teleop_cpp'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu-xorg:/etc/xdg'), ('GEMINI_API_KEY', 'AIzaSyDL-m-a1CuctYZ15wnY8hEybhdco0FqGFs'), ('CLUTTER_IM_MODULE', 'xim'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/share/ubuntu-xorg:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LC_NUMERIC', 'ko_KR.UTF-8'), ('LC_PAPER', 'ko_KR.UTF-8'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/home/hsw/rby1_rviz/install/rby1_teleop_cpp:/opt/ros/humble')]), 'shell': False}
+[0.027911] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.11 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[0.099981] (-) TimerEvent: {}
+[0.103631] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found rclcpp: 16.0.12 (/opt/ros/humble/share/rclcpp/cmake)\n'}
+[0.119675] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.6 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[0.121201] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.6 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[0.124294] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.6 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[0.129688] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.136250] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[0.152344] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[0.152964] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found rmw_cyclonedds_cpp: 1.3.4 (/opt/ros/humble/share/rmw_cyclonedds_cpp/cmake)\n'}
+[0.162332] (rby1_teleop_cpp) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_cyclonedds_cpp' as default\n"}
+[0.186308] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found sensor_msgs: 4.9.0 (/opt/ros/humble/share/sensor_msgs/cmake)\n'}
+[0.200078] (-) TimerEvent: {}
+[0.200455] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found std_srvs: 4.9.0 (/opt/ros/humble/share/std_srvs/cmake)\n'}
+[0.204708] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found tf2_ros: 0.25.13 (/opt/ros/humble/share/tf2_ros/cmake)\n'}
+[0.245610] (rby1_teleop_cpp) StdoutLine: {'line': b'-- pinocchio_default FOUND. pinocchio_default at /opt/openrobots/lib/libpinocchio_default.so\n'}
+[0.245719] (rby1_teleop_cpp) StdoutLine: {'line': b'-- pinocchio_parsers FOUND. pinocchio_parsers at /opt/openrobots/lib/libpinocchio_parsers.so\n'}
+[0.245750] (rby1_teleop_cpp) StdoutLine: {'line': b'-- pinocchio_casadi FOUND. pinocchio_casadi at /opt/openrobots/lib/libpinocchio_casadi.so\n'}
+[0.246200] (rby1_teleop_cpp) StdoutLine: {'line': b'-- boost_filesystem FOUND. boost_filesystem at /usr/lib/x86_64-linux-gnu/libboost_filesystem.so\n'}
+[0.250757] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found Boost: /usr/include (found version "1.74.0") found components: filesystem serialization \n'}
+[0.251157] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[33mCMake Warning at /opt/openrobots/lib/cmake/hpp-fcl/hpp-fclConfig.cmake:4 (message):\n'}
+[0.251237] (rby1_teleop_cpp) StderrLine: {'line': b"  Please update your CMake from 'hpp-fcl' to 'coal', or define\n"}
+[0.251268] (rby1_teleop_cpp) StderrLine: {'line': b'  COAL_DISABLE_HPP_FCL_WARNINGS\n'}
+[0.251292] (rby1_teleop_cpp) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[0.251316] (rby1_teleop_cpp) StderrLine: {'line': b'  /usr/share/cmake-3.22/Modules/CMakeFindDependencyMacro.cmake:47 (find_package)\n'}
+[0.251474] (rby1_teleop_cpp) StderrLine: {'line': b'  /opt/openrobots/lib/cmake/pinocchio/pinocchioConfig.cmake:161 (find_dependency)\n'}
+[0.251505] (rby1_teleop_cpp) StderrLine: {'line': b'  CMakeLists.txt:25 (find_package)\n'}
+[0.251529] (rby1_teleop_cpp) StderrLine: {'line': b'\n'}
+[0.251552] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[0m\n'}
+[0.251575] (rby1_teleop_cpp) StdoutLine: {'line': b'-- coal FOUND. coal at /opt/openrobots/lib/libcoal.so\n'}
+[0.254629] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found Boost: /usr/include (found version "1.74.0") found components: serialization filesystem \n'}
+[0.300202] (-) TimerEvent: {}
+[0.400470] (-) TimerEvent: {}
+[0.434073] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Default C++ standard: 201703\n'}
+[0.434329] (rby1_teleop_cpp) StdoutLine: {'line': b'-- C++ standard sufficient: Minimal required 11, currently defined: 17\n'}
+[0.434841] (rby1_teleop_cpp) StdoutLine: {'line': b'-- C++ standard sufficient: Minimal required 11, currently defined: 17\n'}
+[0.438775] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Found trajectory_msgs: 4.9.0 (/opt/ros/humble/share/trajectory_msgs/cmake)\n'}
+[0.495401] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Configuring done\n'}
+[0.500582] (-) TimerEvent: {}
+[0.501886] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Generating done\n'}
+[0.504234] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Build files have been written to: /home/hsw/rby1_rviz/build/rby1_teleop_cpp\n'}
+[0.525002] (rby1_teleop_cpp) StdoutLine: {'line': b'\x1b[35m\x1b[1mConsolidate compiler generated dependencies of target teleop_ik_node\x1b[0m\n'}
+[0.549832] (rby1_teleop_cpp) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/teleop_ik_node.dir/teleop_ik.cpp.o\x1b[0m\n'}
+[0.600692] (-) TimerEvent: {}
+[0.701030] (-) TimerEvent: {}
+[0.801309] (-) TimerEvent: {}
+[0.901614] (-) TimerEvent: {}
+[1.001923] (-) TimerEvent: {}
+[1.102257] (-) TimerEvent: {}
+[1.202561] (-) TimerEvent: {}
+[1.302855] (-) TimerEvent: {}
+[1.403114] (-) TimerEvent: {}
+[1.503406] (-) TimerEvent: {}
+[1.603760] (-) TimerEvent: {}
+[1.704051] (-) TimerEvent: {}
+[1.804373] (-) TimerEvent: {}
+[1.904686] (-) TimerEvent: {}
+[2.004997] (-) TimerEvent: {}
+[2.105306] (-) TimerEvent: {}
+[2.205599] (-) TimerEvent: {}
+[2.305977] (-) TimerEvent: {}
+[2.406257] (-) TimerEvent: {}
+[2.506553] (-) TimerEvent: {}
+[2.606860] (-) TimerEvent: {}
+[2.707186] (-) TimerEvent: {}
+[2.807500] (-) TimerEvent: {}
+[2.907788] (-) TimerEvent: {}
+[3.008109] (-) TimerEvent: {}
+[3.108499] (-) TimerEvent: {}
+[3.208728] (-) TimerEvent: {}
+[3.308965] (-) TimerEvent: {}
+[3.409185] (-) TimerEvent: {}
+[3.509434] (-) TimerEvent: {}
+[3.609676] (-) TimerEvent: {}
+[3.709975] (-) TimerEvent: {}
+[3.810210] (-) TimerEvent: {}
+[3.910472] (-) TimerEvent: {}
+[4.010746] (-) TimerEvent: {}
+[4.110986] (-) TimerEvent: {}
+[4.211225] (-) TimerEvent: {}
+[4.311472] (-) TimerEvent: {}
+[4.411684] (-) TimerEvent: {}
+[4.511925] (-) TimerEvent: {}
+[4.612160] (-) TimerEvent: {}
+[4.712424] (-) TimerEvent: {}
+[4.812661] (-) TimerEvent: {}
+[4.912891] (-) TimerEvent: {}
+[5.013134] (-) TimerEvent: {}
+[5.113446] (-) TimerEvent: {}
+[5.213725] (-) TimerEvent: {}
+[5.313988] (-) TimerEvent: {}
+[5.414208] (-) TimerEvent: {}
+[5.514492] (-) TimerEvent: {}
+[5.614768] (-) TimerEvent: {}
+[5.715030] (-) TimerEvent: {}
+[5.815247] (-) TimerEvent: {}
+[5.915521] (-) TimerEvent: {}
+[6.015754] (-) TimerEvent: {}
+[6.115954] (-) TimerEvent: {}
+[6.216183] (-) TimerEvent: {}
+[6.316427] (-) TimerEvent: {}
+[6.416694] (-) TimerEvent: {}
+[6.516933] (-) TimerEvent: {}
+[6.617143] (-) TimerEvent: {}
+[6.717355] (-) TimerEvent: {}
+[6.817638] (-) TimerEvent: {}
+[6.917888] (-) TimerEvent: {}
+[7.018133] (-) TimerEvent: {}
+[7.118362] (-) TimerEvent: {}
+[7.218611] (-) TimerEvent: {}
+[7.318889] (-) TimerEvent: {}
+[7.419070] (-) TimerEvent: {}
+[7.519335] (-) TimerEvent: {}
+[7.619611] (-) TimerEvent: {}
+[7.719891] (-) TimerEvent: {}
+[7.820179] (-) TimerEvent: {}
+[7.920432] (-) TimerEvent: {}
+[8.020657] (-) TimerEvent: {}
+[8.120911] (-) TimerEvent: {}
+[8.221160] (-) TimerEvent: {}
+[8.321373] (-) TimerEvent: {}
+[8.421616] (-) TimerEvent: {}
+[8.521867] (-) TimerEvent: {}
+[8.622149] (-) TimerEvent: {}
+[8.722377] (-) TimerEvent: {}
+[8.822630] (-) TimerEvent: {}
+[8.922951] (-) TimerEvent: {}
+[9.023178] (-) TimerEvent: {}
+[9.123443] (-) TimerEvent: {}
+[9.223719] (-) TimerEvent: {}
+[9.323958] (-) TimerEvent: {}
+[9.424181] (-) TimerEvent: {}
+[9.524433] (-) TimerEvent: {}
+[9.624693] (-) TimerEvent: {}
+[9.724920] (-) TimerEvent: {}
+[9.825127] (-) TimerEvent: {}
+[9.925353] (-) TimerEvent: {}
+[10.025591] (-) TimerEvent: {}
+[10.125818] (-) TimerEvent: {}
+[10.226124] (-) TimerEvent: {}
+[10.326405] (-) TimerEvent: {}
+[10.426742] (-) TimerEvent: {}
+[10.526957] (-) TimerEvent: {}
+[10.627180] (-) TimerEvent: {}
+[10.727429] (-) TimerEvent: {}
+[10.827667] (-) TimerEvent: {}
+[10.927876] (-) TimerEvent: {}
+[11.028131] (-) TimerEvent: {}
+[11.128360] (-) TimerEvent: {}
+[11.228656] (-) TimerEvent: {}
+[11.328952] (-) TimerEvent: {}
+[11.429188] (-) TimerEvent: {}
+[11.529436] (-) TimerEvent: {}
+[11.629717] (-) TimerEvent: {}
+[11.730016] (-) TimerEvent: {}
+[11.830234] (-) TimerEvent: {}
+[11.930487] (-) TimerEvent: {}
+[12.030743] (-) TimerEvent: {}
+[12.131005] (-) TimerEvent: {}
+[12.231280] (-) TimerEvent: {}
+[12.331508] (-) TimerEvent: {}
+[12.431754] (-) TimerEvent: {}
+[12.531988] (-) TimerEvent: {}
+[12.632292] (-) TimerEvent: {}
+[12.732549] (-) TimerEvent: {}
+[12.832802] (-) TimerEvent: {}
+[12.933140] (-) TimerEvent: {}
+[13.033382] (-) TimerEvent: {}
+[13.133625] (-) TimerEvent: {}
+[13.233888] (-) TimerEvent: {}
+[13.334139] (-) TimerEvent: {}
+[13.434383] (-) TimerEvent: {}
+[13.534623] (-) TimerEvent: {}
+[13.634849] (-) TimerEvent: {}
+[13.735119] (-) TimerEvent: {}
+[13.835329] (-) TimerEvent: {}
+[13.935577] (-) TimerEvent: {}
+[14.035824] (-) TimerEvent: {}
+[14.136043] (-) TimerEvent: {}
+[14.236369] (-) TimerEvent: {}
+[14.336583] (-) TimerEvent: {}
+[14.436905] (-) TimerEvent: {}
+[14.537219] (-) TimerEvent: {}
+[14.637471] (-) TimerEvent: {}
+[14.737714] (-) TimerEvent: {}
+[14.837970] (-) TimerEvent: {}
+[14.938215] (-) TimerEvent: {}
+[15.038476] (-) TimerEvent: {}
+[15.138723] (-) TimerEvent: {}
+[15.238963] (-) TimerEvent: {}
+[15.339202] (-) TimerEvent: {}
+[15.383408] (rby1_teleop_cpp) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-generic.hpp:9\x1b[m\x1b[K,\n'}
+[15.383650] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/model.hpp:17\x1b[m\x1b[K,\n'}
+[15.383705] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf.hpp:9\x1b[m\x1b[K,\n'}
+[15.383731] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/hsw/rby1_rviz/teleop_ik.cpp:9\x1b[m\x1b[K:\n'}
+[15.383756] (rby1_teleop_cpp) StderrLine: {'line': b'/opt/openrobots/include/pinocchio/multibody/joint/joint-composite.hpp: In instantiation of \xe2\x80\x98\x1b[01m\x1b[Kpinocchio::JointModelCompositeTpl<Scalar, Options, JointCollectionTpl>::JointModelCompositeTpl(const pinocchio::JointModelCompositeTpl<Scalar, Options, JointCollectionTpl>&) [with _Scalar = double; int _Options = 0; JointCollectionTpl = pinocchio::JointCollectionDefaultTpl]\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[15.383783] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/boost/variant/recursive_wrapper.hpp:129:10:\x1b[m\x1b[K   required from \xe2\x80\x98\x1b[01m\x1b[Kboost::recursive_wrapper<T>::recursive_wrapper(boost::recursive_wrapper<T>&&) [with T = pinocchio::JointModelCompositeTpl<double>]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[15.383814] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/boost/variant/variant.hpp:495:9:\x1b[m\x1b[K   required from \xe2\x80\x98\x1b[01m\x1b[Kvoid boost::detail::variant::move_into::internal_visit(T&, int) const [with T = boost::recursive_wrapper<pinocchio::JointModelCompositeTpl<double> >]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[15.383837] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/boost/variant/detail/visitation_impl.hpp:117:34:\x1b[m\x1b[K   required from \xe2\x80\x98\x1b[01m\x1b[Ktypename Visitor::result_type boost::detail::variant::visitation_impl_invoke_impl(int, Visitor&, VoidPtrCV, T*, mpl_::true_) [with Visitor = boost::detail::variant::move_into; VoidPtrCV = void*; T = boost::recursive_wrapper<pinocchio::JointModelCompositeTpl<double> >; typename Visitor::result_type = void; mpl_::true_ = mpl_::bool_<true>]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[15.383869] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/boost/variant/detail/visitation_impl.hpp:157:41:\x1b[m\x1b[K   required from \xe2\x80\x98\x1b[01m\x1b[Ktypename Visitor::result_type boost::detail::variant::visitation_impl_invoke(int, Visitor&, VoidPtrCV, T*, NoBackupFlag, int) [with Visitor = boost::detail::variant::move_into; VoidPtrCV = void*; T = boost::recursive_wrapper<pinocchio::JointModelCompositeTpl<double> >; NoBackupFlag = boost::variant<pinocchio::JointModelRevoluteTpl<double, 0, 0>, pinocchio::JointModelRevoluteTpl<double, 0, 1>, pinocchio::JointModelRevoluteTpl<double, 0, 2>, pinocchio::JointModelFreeFlyerTpl<double, 0>, pinocchio::JointModelPlanarTpl<double, 0>, pinocchio::JointModelRevoluteUnalignedTpl<double, 0>, pinocchio::JointModelSphericalTpl<double, 0>, pinocchio::JointModelSphericalZYXTpl<double, 0>, pinocchio::JointModelEllipsoidTpl<double, 0>, pinocchio::JointModelPrismaticTpl<double, 0, 0>, pinocchio::JointModelPrismaticTpl<double, 0, 1>, pinocchio::JointModelPrismaticTpl<double, 0, 2>, pinocchio::JointModelPrismaticUnalignedTpl<double, 0>, pinocchio::JointModelTranslationTpl<double, 0>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 0>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 1>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 2>, pinocchio::JointModelRevoluteUnboundedUnalignedTpl<double, 0>, pinocchio::JointModelHelicalTpl<double, 0, 0>, pinocchio::JointModelHelicalTpl<double, 0, 1>, pinocchio::JointModelHelicalTpl<double, 0, 2>, pinocchio::JointModelHelicalUnalignedTpl<double, 0>, pinocchio::JointModelUniversalTpl<double, 0>, boost::recursive_wrapper<pinocchio::JointModelCompositeTpl<double, 0, pinocchio::JointCollectionDefaultTpl> >, boost::recursive_wrapper<pinocchio::JointModelMimicTpl<double, 0, pinocchio::JointCollectionDefaultTpl> > >::has_fallback_type_; typename Visitor::result_type = void]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[15.383902] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/boost/variant/detail/visitation_impl.hpp:238:5:\x1b[m\x1b[K   required from \xe2\x80\x98\x1b[01m\x1b[Ktypename Visitor::result_type boost::detail::variant::visitation_impl(int, int, Visitor&, VoidPtrCV, mpl_::false_, NoBackupFlag, Which*, step0*) [with Which = mpl_::int_<0>; step0 = boost::detail::variant::visitation_impl_step<boost::mpl::l_iter<boost::mpl::l_item<mpl_::long_<25>, pinocchio::JointModelRevoluteTpl<double, 0, 0>, boost::mpl::l_item<mpl_::long_<24>, pinocchio::JointModelRevoluteTpl<double, 0, 1>, boost::mpl::l_item<mpl_::long_<23>, pinocchio::JointModelRevoluteTpl<double, 0, 2>, boost::mpl::l_item<mpl_::long_<22>, pinocchio::JointModelFreeFlyerTpl<double>, boost::mpl::l_item<mpl_::long_<21>, pinocchio::JointModelPlanarTpl<double>, boost::mpl::l_item<mpl_::long_<20>, pinocchio::JointModelRevoluteUnalignedTpl<double>, boost::mpl::l_item<mpl_::long_<19>, pinocchio::JointModelSphericalTpl<double>, boost::mpl::l_item<mpl_::long_<18>, pinocchio::JointModelSphericalZYXTpl<double>, boost::mpl::l_item<mpl_::long_<17>, pinocchio::JointModelEllipsoidTpl<double>, boost::mpl::l_item<mpl_::long_<16>, pinocchio::JointModelPrismaticTpl<double, 0, 0>, boost::mpl::l_item<mpl_::long_<15>, pinocchio::JointModelPrismaticTpl<double, 0, 1>, boost::mpl::l_item<mpl_::long_<14>, pinocchio::JointModelPrismaticTpl<double, 0, 2>, boost::mpl::l_item<mpl_::long_<13>, pinocchio::JointModelPrismaticUnalignedTpl<double>, boost::mpl::l_item<mpl_::long_<12>, pinocchio::JointModelTranslationTpl<double>, boost::mpl::l_item<mpl_::long_<11>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 0>, boost::mpl::l_item<mpl_::long_<10>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 1>, boost::mpl::l_item<mpl_::long_<9>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 2>, boost::mpl::l_item<mpl_::long_<8>, pinocchio::JointModelRevoluteUnboundedUnalignedTpl<double>, boost::mpl::l_item<mpl_::long_<7>, pinocchio::JointModelHelicalTpl<double, 0, 0>, boost::mpl::l_item<mpl_::long_<6>, pinocchio::JointModelHelicalTpl<double, 0, 1>, boost::mpl::l_item<mpl_::long_<5>, pinocchio::JointModelHelicalTpl<double, 0, 2>, boost::mpl::l_item<mpl_::long_<4>, pinocchio::JointModelHelicalUnalignedTpl<double>, boost::mpl::l_item<mpl_::long_<3>, pinocchio::JointModelUniversalTpl<double>, boost::mpl::l_item<mpl_::long_<2>, boost::recursive_wrapper<pinocchio::JointModelCompositeTpl<double> >, boost::mpl::l_item<mpl_::long_<1>, boost::recursive_wrapper<pinocchio::JointModelMimicTpl<double> >, boost::mpl::l_end> > > > > > > > > > > > > > > > > > > > > > > > > >, boost::mpl::l_iter<boost::mpl::l_end> >; Visitor = boost::detail::variant::move_into; VoidPtrCV = void*; NoBackupFlag = boost::variant<pinocchio::JointModelRevoluteTpl<double, 0, 0>, pinocchio::JointModelRevoluteTpl<double, 0, 1>, pinocchio::JointModelRevoluteTpl<double, 0, 2>, pinocchio::JointModelFreeFlyerTpl<double, 0>, pinocchio::JointModelPlanarTpl<double, 0>, pinocchio::JointModelRevoluteUnalignedTpl<double, 0>, pinocchio::JointModelSphericalTpl<double, 0>, pinocchio::JointModelSphericalZYXTpl<double, 0>, pinocchio::JointModelEllipsoidTpl<double, 0>, pinocchio::JointModelPrismaticTpl<double, 0, 0>, pinocchio::JointModelPrismaticTpl<double, 0, 1>, pinocchio::JointModelPrismaticTpl<double, 0, 2>, pinocchio::JointModelPrismaticUnalignedTpl<double, 0>, pinocchio::JointModelTranslationTpl<double, 0>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 0>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 1>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 2>, pinocchio::JointModelRevoluteUnboundedUnalignedTpl<double, 0>, pinocchio::JointModelHelicalTpl<double, 0, 0>, pinocchio::JointModelHelicalTpl<double, 0, 1>, pinocchio::JointModelHelicalTpl<double, 0, 2>, pinocchio::JointModelHelicalUnalignedTpl<double, 0>, pinocchio::JointModelUniversalTpl<double, 0>, boost::recursive_wrapper<pinocchio::JointModelCompositeTpl<double, 0, pinocchio::JointCollectionDefaultTpl> >, boost::recursive_wrapper<pinocchio::JointModelMimicTpl<double, 0, pinocchio::JointCollectionDefaultTpl> > >::has_fallback_type_; typename Visitor::result_type = void; mpl_::false_ = mpl_::bool_<false>]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[15.383943] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/boost/variant/variant.hpp:2337:48:\x1b[m\x1b[K   required from \xe2\x80\x98\x1b[01m\x1b[Kstatic typename Visitor::result_type boost::variant<T0, TN>::internal_apply_visitor_impl(int, int, Visitor&, VoidPtrCV) [with Visitor = boost::detail::variant::move_into; VoidPtrCV = void*; T0_ = pinocchio::JointModelRevoluteTpl<double, 0, 0>; TN = {pinocchio::JointModelRevoluteTpl<double, 0, 1>, pinocchio::JointModelRevoluteTpl<double, 0, 2>, pinocchio::JointModelFreeFlyerTpl<double, 0>, pinocchio::JointModelPlanarTpl<double, 0>, pinocchio::JointModelRevoluteUnalignedTpl<double, 0>, pinocchio::JointModelSphericalTpl<double, 0>, pinocchio::JointModelSphericalZYXTpl<double, 0>, pinocchio::JointModelEllipsoidTpl<double, 0>, pinocchio::JointModelPrismaticTpl<double, 0, 0>, pinocchio::JointModelPrismaticTpl<double, 0, 1>, pinocchio::JointModelPrismaticTpl<double, 0, 2>, pinocchio::JointModelPrismaticUnalignedTpl<double, 0>, pinocchio::JointModelTranslationTpl<double, 0>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 0>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 1>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 2>, pinocchio::JointModelRevoluteUnboundedUnalignedTpl<double, 0>, pinocchio::JointModelHelicalTpl<double, 0, 0>, pinocchio::JointModelHelicalTpl<double, 0, 1>, pinocchio::JointModelHelicalTpl<double, 0, 2>, pinocchio::JointModelHelicalUnalignedTpl<double, 0>, pinocchio::JointModelUniversalTpl<double, 0>, boost::recursive_wrapper<pinocchio::JointModelCompositeTpl<double, 0, pinocchio::JointCollectionDefaultTpl> >, boost::recursive_wrapper<pinocchio::JointModelMimicTpl<double, 0, pinocchio::JointCollectionDefaultTpl> >}; typename Visitor::result_type = void]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[15.383972] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/boost/variant/variant.hpp:2349:43:\x1b[m\x1b[K   required from \xe2\x80\x98\x1b[01m\x1b[Ktypename Visitor::result_type boost::variant<T0, TN>::internal_apply_visitor(Visitor&) [with Visitor = boost::detail::variant::move_into; T0_ = pinocchio::JointModelRevoluteTpl<double, 0, 0>; TN = {pinocchio::JointModelRevoluteTpl<double, 0, 1>, pinocchio::JointModelRevoluteTpl<double, 0, 2>, pinocchio::JointModelFreeFlyerTpl<double, 0>, pinocchio::JointModelPlanarTpl<double, 0>, pinocchio::JointModelRevoluteUnalignedTpl<double, 0>, pinocchio::JointModelSphericalTpl<double, 0>, pinocchio::JointModelSphericalZYXTpl<double, 0>, pinocchio::JointModelEllipsoidTpl<double, 0>, pinocchio::JointModelPrismaticTpl<double, 0, 0>, pinocchio::JointModelPrismaticTpl<double, 0, 1>, pinocchio::JointModelPrismaticTpl<double, 0, 2>, pinocchio::JointModelPrismaticUnalignedTpl<double, 0>, pinocchio::JointModelTranslationTpl<double, 0>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 0>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 1>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 2>, pinocchio::JointModelRevoluteUnboundedUnalignedTpl<double, 0>, pinocchio::JointModelHelicalTpl<double, 0, 0>, pinocchio::JointModelHelicalTpl<double, 0, 1>, pinocchio::JointModelHelicalTpl<double, 0, 2>, pinocchio::JointModelHelicalUnalignedTpl<double, 0>, pinocchio::JointModelUniversalTpl<double, 0>, boost::recursive_wrapper<pinocchio::JointModelCompositeTpl<double, 0, pinocchio::JointCollectionDefaultTpl> >, boost::recursive_wrapper<pinocchio::JointModelMimicTpl<double, 0, pinocchio::JointCollectionDefaultTpl> >}; typename Visitor::result_type = void]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[15.383999] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/boost/variant/variant.hpp:1774:39:\x1b[m\x1b[K   required from \xe2\x80\x98\x1b[01m\x1b[Kboost::variant<T0, TN>::variant(boost::variant<T0, TN>&&) [with T0_ = pinocchio::JointModelRevoluteTpl<double, 0, 0>; TN = {pinocchio::JointModelRevoluteTpl<double, 0, 1>, pinocchio::JointModelRevoluteTpl<double, 0, 2>, pinocchio::JointModelFreeFlyerTpl<double, 0>, pinocchio::JointModelPlanarTpl<double, 0>, pinocchio::JointModelRevoluteUnalignedTpl<double, 0>, pinocchio::JointModelSphericalTpl<double, 0>, pinocchio::JointModelSphericalZYXTpl<double, 0>, pinocchio::JointModelEllipsoidTpl<double, 0>, pinocchio::JointModelPrismaticTpl<double, 0, 0>, pinocchio::JointModelPrismaticTpl<double, 0, 1>, pinocchio::JointModelPrismaticTpl<double, 0, 2>, pinocchio::JointModelPrismaticUnalignedTpl<double, 0>, pinocchio::JointModelTranslationTpl<double, 0>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 0>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 1>, pinocchio::JointModelRevoluteUnboundedTpl<double, 0, 2>, pinocchio::JointModelRevoluteUnboundedUnalignedTpl<double, 0>, pinocchio::JointModelHelicalTpl<double, 0, 0>, pinocchio::JointModelHelicalTpl<double, 0, 1>, pinocchio::JointModelHelicalTpl<double, 0, 2>, pinocchio::JointModelHelicalUnalignedTpl<double, 0>, pinocchio::JointModelUniversalTpl<double, 0>, boost::recursive_wrapper<pinocchio::JointModelCompositeTpl<double, 0, pinocchio::JointCollectionDefaultTpl> >, boost::recursive_wrapper<pinocchio::JointModelMimicTpl<double, 0, pinocchio::JointCollectionDefaultTpl> >}]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[15.384045] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-generic.hpp:304:60:\x1b[m\x1b[K   required from \xe2\x80\x98\x1b[01m\x1b[Kpinocchio::JointModelTpl<Scalar, Options, JointCollectionTpl>::JointModelTpl(const pinocchio::JointModelBase<OtherDerived>&) [with JointModelDerived = pinocchio::JointModelFreeFlyerTpl<double>; _Scalar = double; int _Options = 0; JointCollectionTpl = pinocchio::JointCollectionDefaultTpl]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[15.384069] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf/model.hxx:256:38:\x1b[m\x1b[K   required from \xe2\x80\x98\x1b[01m\x1b[Kvoid pinocchio::urdf::details::UrdfVisitor<Scalar, Options, JointCollectionTpl>::addJointAndBody(pinocchio::urdf::details::UrdfVisitor<Scalar, Options, JointCollectionTpl>::JointType, const Vector3&, const FrameIndex&, const SE3&, const string&, const Inertia&, const SE3&, const string&, const VectorConstRef&, const VectorConstRef&, const VectorConstRef&, const VectorConstRef&, const VectorConstRef&, const VectorConstRef&, const boost::optional<pinocchio::urdf::details::MimicInfo<_Scalar, Options> >&) [with Scalar = double; int Options = 0; JointCollectionTpl = pinocchio::JointCollectionDefaultTpl; pinocchio::urdf::details::UrdfVisitor<Scalar, Options, JointCollectionTpl>::JointType = pinocchio::urdf::details::UrdfVisitorBaseTpl<double, 0>::JointType; pinocchio::urdf::details::UrdfVisitor<Scalar, Options, JointCollectionTpl>::Vector3 = Eigen::Matrix<double, 3, 1>; pinocchio::FrameIndex = long unsigned int; pinocchio::urdf::details::UrdfVisitor<Scalar, Options, JointCollectionTpl>::SE3 = pinocchio::SE3Tpl<double, 0>; std::string = std::__cxx11::basic_string<char>; pinocchio::urdf::details::UrdfVisitor<Scalar, Options, JointCollectionTpl>::Inertia = pinocchio::InertiaTpl<double, 0>; pinocchio::urdf::details::UrdfVisitor<Scalar, Options, JointCollectionTpl>::VectorConstRef = Eigen::Ref<const Eigen::Matrix<double, -1, 1>, 0, Eigen::InnerStride<1> >]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[15.384098] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf/model.hxx:234:14:\x1b[m\x1b[K   required from here\n'}
+[15.384120] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-composite.hpp:727:9:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Kpinocchio::JointModelCompositeTpl<double>::njoints\x1b[m\x1b[K\xe2\x80\x99 will be initialized after [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder\x07-Wreorder\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[15.384150] (rby1_teleop_cpp) StderrLine: {'line': b'  727 |     int \x1b[01;35m\x1b[Knjoints\x1b[m\x1b[K;\n'}
+[15.384172] (rby1_teleop_cpp) StderrLine: {'line': b'      |         \x1b[01;35m\x1b[K^~~~~~~\x1b[m\x1b[K\n'}
+[15.384193] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-composite.hpp:723:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[K  \xe2\x80\x98\x1b[01m\x1b[Kstd::vector<std::__cxx11::basic_string<char> > pinocchio::JointModelCompositeTpl<double>::jointNames\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder\x07-Wreorder\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[15.384216] (rby1_teleop_cpp) StderrLine: {'line': b'  723 |     std::vector<std::string> \x1b[01;35m\x1b[KjointNames\x1b[m\x1b[K;\n'}
+[15.384236] (rby1_teleop_cpp) StderrLine: {'line': b'      |                              \x1b[01;35m\x1b[K^~~~~~~~~~\x1b[m\x1b[K\n'}
+[15.384257] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-composite.hpp:266:5:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[K  when initialized here [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder\x07-Wreorder\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[15.384280] (rby1_teleop_cpp) StderrLine: {'line': b'  266 |     \x1b[01;35m\x1b[KJointModelCompositeTpl\x1b[m\x1b[K(const JointModelCompositeTpl & other)\n'}
+[15.384301] (rby1_teleop_cpp) StderrLine: {'line': b'      |     \x1b[01;35m\x1b[K^~~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[15.439343] (-) TimerEvent: {}
+[15.539578] (-) TimerEvent: {}
+[15.639809] (-) TimerEvent: {}
+[15.740053] (-) TimerEvent: {}
+[15.840360] (-) TimerEvent: {}
+[15.940599] (-) TimerEvent: {}
+[16.040825] (-) TimerEvent: {}
+[16.141036] (-) TimerEvent: {}
+[16.241348] (-) TimerEvent: {}
+[16.341605] (-) TimerEvent: {}
+[16.441875] (-) TimerEvent: {}
+[16.542149] (-) TimerEvent: {}
+[16.642472] (-) TimerEvent: {}
+[16.743072] (-) TimerEvent: {}
+[16.843341] (-) TimerEvent: {}
+[16.943658] (-) TimerEvent: {}
+[17.043963] (-) TimerEvent: {}
+[17.144337] (-) TimerEvent: {}
+[17.244661] (-) TimerEvent: {}
+[17.344985] (-) TimerEvent: {}
+[17.445275] (-) TimerEvent: {}
+[17.545592] (-) TimerEvent: {}
+[17.645889] (-) TimerEvent: {}
+[17.746175] (-) TimerEvent: {}
+[17.846487] (-) TimerEvent: {}
+[17.946746] (-) TimerEvent: {}
+[18.047054] (-) TimerEvent: {}
+[18.147334] (-) TimerEvent: {}
+[18.247647] (-) TimerEvent: {}
+[18.347945] (-) TimerEvent: {}
+[18.448305] (-) TimerEvent: {}
+[18.548616] (-) TimerEvent: {}
+[18.648920] (-) TimerEvent: {}
+[18.749228] (-) TimerEvent: {}
+[18.849523] (-) TimerEvent: {}
+[18.949825] (-) TimerEvent: {}
+[19.050151] (-) TimerEvent: {}
+[19.150473] (-) TimerEvent: {}
+[19.250778] (-) TimerEvent: {}
+[19.351127] (-) TimerEvent: {}
+[19.451398] (-) TimerEvent: {}
+[19.551697] (-) TimerEvent: {}
+[19.651996] (-) TimerEvent: {}
+[19.752414] (-) TimerEvent: {}
+[19.852714] (-) TimerEvent: {}
+[19.952979] (-) TimerEvent: {}
+[20.053283] (-) TimerEvent: {}
+[20.153543] (-) TimerEvent: {}
+[20.253780] (-) TimerEvent: {}
+[20.353999] (-) TimerEvent: {}
+[20.454264] (-) TimerEvent: {}
+[20.554531] (-) TimerEvent: {}
+[20.654772] (-) TimerEvent: {}
+[20.754984] (-) TimerEvent: {}
+[20.855296] (-) TimerEvent: {}
+[20.955541] (-) TimerEvent: {}
+[21.055818] (-) TimerEvent: {}
+[21.156078] (-) TimerEvent: {}
+[21.256352] (-) TimerEvent: {}
+[21.356612] (-) TimerEvent: {}
+[21.456863] (-) TimerEvent: {}
+[21.557078] (-) TimerEvent: {}
+[21.657334] (-) TimerEvent: {}
+[21.757580] (-) TimerEvent: {}
+[21.857824] (-) TimerEvent: {}
+[21.958053] (-) TimerEvent: {}
+[22.058279] (-) TimerEvent: {}
+[22.158539] (-) TimerEvent: {}
+[22.258785] (-) TimerEvent: {}
+[22.359054] (-) TimerEvent: {}
+[22.459310] (-) TimerEvent: {}
+[22.559631] (-) TimerEvent: {}
+[22.659896] (-) TimerEvent: {}
+[22.760153] (-) TimerEvent: {}
+[22.860429] (-) TimerEvent: {}
+[22.960638] (-) TimerEvent: {}
+[23.060883] (-) TimerEvent: {}
+[23.161068] (-) TimerEvent: {}
+[23.264067] (-) TimerEvent: {}
+[23.364310] (-) TimerEvent: {}
+[23.464570] (-) TimerEvent: {}
+[23.564821] (-) TimerEvent: {}
+[23.665087] (-) TimerEvent: {}
+[23.765363] (-) TimerEvent: {}
+[23.865675] (-) TimerEvent: {}
+[23.965919] (-) TimerEvent: {}
+[24.066137] (-) TimerEvent: {}
+[24.166374] (-) TimerEvent: {}
+[24.266686] (-) TimerEvent: {}
+[24.366956] (-) TimerEvent: {}
+[24.467240] (-) TimerEvent: {}
+[24.567538] (-) TimerEvent: {}
+[24.667736] (-) TimerEvent: {}
+[24.767986] (-) TimerEvent: {}
+[24.868238] (-) TimerEvent: {}
+[24.968467] (-) TimerEvent: {}
+[25.068693] (-) TimerEvent: {}
+[25.168893] (-) TimerEvent: {}
+[25.269149] (-) TimerEvent: {}
+[25.369410] (-) TimerEvent: {}
+[25.469664] (-) TimerEvent: {}
+[25.569937] (-) TimerEvent: {}
+[25.670198] (-) TimerEvent: {}
+[25.770423] (-) TimerEvent: {}
+[25.870705] (-) TimerEvent: {}
+[25.970930] (-) TimerEvent: {}
+[26.071182] (-) TimerEvent: {}
+[26.171425] (-) TimerEvent: {}
+[26.271663] (-) TimerEvent: {}
+[26.371888] (-) TimerEvent: {}
+[26.472144] (-) TimerEvent: {}
+[26.572413] (-) TimerEvent: {}
+[26.672632] (-) TimerEvent: {}
+[26.772899] (-) TimerEvent: {}
+[26.873159] (-) TimerEvent: {}
+[26.973417] (-) TimerEvent: {}
+[27.073639] (-) TimerEvent: {}
+[27.173899] (-) TimerEvent: {}
+[27.274141] (-) TimerEvent: {}
+[27.374345] (-) TimerEvent: {}
+[27.474625] (-) TimerEvent: {}
+[27.574827] (-) TimerEvent: {}
+[27.632609] (rby1_teleop_cpp) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joints.hpp:23\x1b[m\x1b[K,\n'}
+[27.632750] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-collection.hpp:9\x1b[m\x1b[K,\n'}
+[27.632782] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-generic.hpp:8\x1b[m\x1b[K,\n'}
+[27.632807] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/model.hpp:17\x1b[m\x1b[K,\n'}
+[27.632832] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf.hpp:9\x1b[m\x1b[K,\n'}
+[27.632855] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/hsw/rby1_rviz/teleop_ik.cpp:9\x1b[m\x1b[K:\n'}
+[27.632879] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-universal.hpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid pinocchio::JointModelUniversalTpl<Scalar, Options>::calc(pinocchio::JointModelUniversalTpl<Scalar, Options>::JointDataDerived&, const Eigen::MatrixBase<OtherDerived>&) const [with ConfigVector = Eigen::Ref<const Eigen::Matrix<double, -1, 1>, 0, Eigen::InnerStride<1> >; _Scalar = double; int _Options = 0]\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[27.632905] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-universal.hpp:487:23:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krot1\x1b[m\x1b[K\xe2\x80\x99 may be used uninitialized [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmaybe-uninitialized\x07-Wmaybe-uninitialized\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[27.632932] (rby1_teleop_cpp) StderrLine: {'line': b'  487 |       \x1b[01;35m\x1b[KtoRotationMatrix(axis1, c0, s0, rot1)\x1b[m\x1b[K;\n'}
+[27.632955] (rby1_teleop_cpp) StderrLine: {'line': b'      |       \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[27.632977] (rby1_teleop_cpp) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/spatial/se3-tpl.hpp:13\x1b[m\x1b[K,\n'}
+[27.632999] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/spatial/se3.hpp:47\x1b[m\x1b[K,\n'}
+[27.633033] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/model.hpp:10\x1b[m\x1b[K,\n'}
+[27.633059] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf.hpp:9\x1b[m\x1b[K,\n'}
+[27.633079] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/hsw/rby1_rviz/teleop_ik.cpp:9\x1b[m\x1b[K:\n'}
+[27.633101] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/math/rotation.hpp:26:8:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kby argument 4 of type \xe2\x80\x98\x1b[01m\x1b[Kconst Eigen::MatrixBase<Eigen::Matrix<double, 3, 3> >&\x1b[m\x1b[K\xe2\x80\x99 to \xe2\x80\x98\x1b[01m\x1b[Kvoid pinocchio::toRotationMatrix(const Eigen::MatrixBase<Derived>&, const Scalar&, const Scalar&, const Eigen::MatrixBase<OtherDerived>&) [with Vector3 = Eigen::Matrix<double, 3, 1>; Scalar = double; Matrix3 = Eigen::Matrix<double, 3, 3>]\x1b[m\x1b[K\xe2\x80\x99 declared here\n'}
+[27.633127] (rby1_teleop_cpp) StderrLine: {'line': b'   26 |   void \x1b[01;36m\x1b[KtoRotationMatrix\x1b[m\x1b[K(\n'}
+[27.633149] (rby1_teleop_cpp) StderrLine: {'line': b'      |        \x1b[01;36m\x1b[K^~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[27.633170] (rby1_teleop_cpp) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joints.hpp:23\x1b[m\x1b[K,\n'}
+[27.633191] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-collection.hpp:9\x1b[m\x1b[K,\n'}
+[27.633212] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-generic.hpp:8\x1b[m\x1b[K,\n'}
+[27.633233] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/model.hpp:17\x1b[m\x1b[K,\n'}
+[27.633253] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf.hpp:9\x1b[m\x1b[K,\n'}
+[27.633274] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/hsw/rby1_rviz/teleop_ik.cpp:9\x1b[m\x1b[K:\n'}
+[27.633294] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-universal.hpp:486:15:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krot1\x1b[m\x1b[K\xe2\x80\x99 declared here\n'}
+[27.633316] (rby1_teleop_cpp) StderrLine: {'line': b'  486 |       Matrix3 \x1b[01;36m\x1b[Krot1\x1b[m\x1b[K, rot2;\n'}
+[27.633337] (rby1_teleop_cpp) StderrLine: {'line': b'      |               \x1b[01;36m\x1b[K^~~~\x1b[m\x1b[K\n'}
+[27.633358] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-universal.hpp:488:23:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krot2\x1b[m\x1b[K\xe2\x80\x99 may be used uninitialized [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmaybe-uninitialized\x07-Wmaybe-uninitialized\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[27.633381] (rby1_teleop_cpp) StderrLine: {'line': b'  488 |       \x1b[01;35m\x1b[KtoRotationMatrix(axis2, c1, s1, rot2)\x1b[m\x1b[K;\n'}
+[27.633402] (rby1_teleop_cpp) StderrLine: {'line': b'      |       \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[27.633422] (rby1_teleop_cpp) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/spatial/se3-tpl.hpp:13\x1b[m\x1b[K,\n'}
+[27.633449] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/spatial/se3.hpp:47\x1b[m\x1b[K,\n'}
+[27.633471] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/model.hpp:10\x1b[m\x1b[K,\n'}
+[27.633492] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf.hpp:9\x1b[m\x1b[K,\n'}
+[27.633513] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/hsw/rby1_rviz/teleop_ik.cpp:9\x1b[m\x1b[K:\n'}
+[27.633539] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/math/rotation.hpp:26:8:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kby argument 4 of type \xe2\x80\x98\x1b[01m\x1b[Kconst Eigen::MatrixBase<Eigen::Matrix<double, 3, 3> >&\x1b[m\x1b[K\xe2\x80\x99 to \xe2\x80\x98\x1b[01m\x1b[Kvoid pinocchio::toRotationMatrix(const Eigen::MatrixBase<Derived>&, const Scalar&, const Scalar&, const Eigen::MatrixBase<OtherDerived>&) [with Vector3 = Eigen::Matrix<double, 3, 1>; Scalar = double; Matrix3 = Eigen::Matrix<double, 3, 3>]\x1b[m\x1b[K\xe2\x80\x99 declared here\n'}
+[27.633562] (rby1_teleop_cpp) StderrLine: {'line': b'   26 |   void \x1b[01;36m\x1b[KtoRotationMatrix\x1b[m\x1b[K(\n'}
+[27.633582] (rby1_teleop_cpp) StderrLine: {'line': b'      |        \x1b[01;36m\x1b[K^~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[27.633603] (rby1_teleop_cpp) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joints.hpp:23\x1b[m\x1b[K,\n'}
+[27.633624] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-collection.hpp:9\x1b[m\x1b[K,\n'}
+[27.633647] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-generic.hpp:8\x1b[m\x1b[K,\n'}
+[27.633667] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/model.hpp:17\x1b[m\x1b[K,\n'}
+[27.633690] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf.hpp:9\x1b[m\x1b[K,\n'}
+[27.633711] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/hsw/rby1_rviz/teleop_ik.cpp:9\x1b[m\x1b[K:\n'}
+[27.633732] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-universal.hpp:486:21:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krot2\x1b[m\x1b[K\xe2\x80\x99 declared here\n'}
+[27.633753] (rby1_teleop_cpp) StderrLine: {'line': b'  486 |       Matrix3 rot1, \x1b[01;36m\x1b[Krot2\x1b[m\x1b[K;\n'}
+[27.633774] (rby1_teleop_cpp) StderrLine: {'line': b'      |                     \x1b[01;36m\x1b[K^~~~\x1b[m\x1b[K\n'}
+[27.648924] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-universal.hpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid pinocchio::JointModelUniversalTpl<Scalar, Options>::calc(pinocchio::JointModelUniversalTpl<Scalar, Options>::JointDataDerived&, const Eigen::MatrixBase<OtherDerived>&) const [with ConfigVector = Eigen::Matrix<double, -1, 1>; _Scalar = double; int _Options = 0]\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[27.649056] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-universal.hpp:487:23:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krot1\x1b[m\x1b[K\xe2\x80\x99 may be used uninitialized [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmaybe-uninitialized\x07-Wmaybe-uninitialized\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[27.649092] (rby1_teleop_cpp) StderrLine: {'line': b'  487 |       \x1b[01;35m\x1b[KtoRotationMatrix(axis1, c0, s0, rot1)\x1b[m\x1b[K;\n'}
+[27.649117] (rby1_teleop_cpp) StderrLine: {'line': b'      |       \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[27.649142] (rby1_teleop_cpp) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/spatial/se3-tpl.hpp:13\x1b[m\x1b[K,\n'}
+[27.649165] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/spatial/se3.hpp:47\x1b[m\x1b[K,\n'}
+[27.649332] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/model.hpp:10\x1b[m\x1b[K,\n'}
+[27.649375] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf.hpp:9\x1b[m\x1b[K,\n'}
+[27.649404] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/hsw/rby1_rviz/teleop_ik.cpp:9\x1b[m\x1b[K:\n'}
+[27.649428] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/math/rotation.hpp:26:8:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kby argument 4 of type \xe2\x80\x98\x1b[01m\x1b[Kconst Eigen::MatrixBase<Eigen::Matrix<double, 3, 3> >&\x1b[m\x1b[K\xe2\x80\x99 to \xe2\x80\x98\x1b[01m\x1b[Kvoid pinocchio::toRotationMatrix(const Eigen::MatrixBase<Derived>&, const Scalar&, const Scalar&, const Eigen::MatrixBase<OtherDerived>&) [with Vector3 = Eigen::Matrix<double, 3, 1>; Scalar = double; Matrix3 = Eigen::Matrix<double, 3, 3>]\x1b[m\x1b[K\xe2\x80\x99 declared here\n'}
+[27.649455] (rby1_teleop_cpp) StderrLine: {'line': b'   26 |   void \x1b[01;36m\x1b[KtoRotationMatrix\x1b[m\x1b[K(\n'}
+[27.649477] (rby1_teleop_cpp) StderrLine: {'line': b'      |        \x1b[01;36m\x1b[K^~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[27.649500] (rby1_teleop_cpp) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joints.hpp:23\x1b[m\x1b[K,\n'}
+[27.649522] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-collection.hpp:9\x1b[m\x1b[K,\n'}
+[27.649544] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-generic.hpp:8\x1b[m\x1b[K,\n'}
+[27.649565] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/model.hpp:17\x1b[m\x1b[K,\n'}
+[27.649587] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf.hpp:9\x1b[m\x1b[K,\n'}
+[27.649609] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/hsw/rby1_rviz/teleop_ik.cpp:9\x1b[m\x1b[K:\n'}
+[27.649629] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-universal.hpp:486:15:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krot1\x1b[m\x1b[K\xe2\x80\x99 declared here\n'}
+[27.649652] (rby1_teleop_cpp) StderrLine: {'line': b'  486 |       Matrix3 \x1b[01;36m\x1b[Krot1\x1b[m\x1b[K, rot2;\n'}
+[27.649673] (rby1_teleop_cpp) StderrLine: {'line': b'      |               \x1b[01;36m\x1b[K^~~~\x1b[m\x1b[K\n'}
+[27.649693] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-universal.hpp:488:23:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krot2\x1b[m\x1b[K\xe2\x80\x99 may be used uninitialized [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wmaybe-uninitialized\x07-Wmaybe-uninitialized\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[27.649721] (rby1_teleop_cpp) StderrLine: {'line': b'  488 |       \x1b[01;35m\x1b[KtoRotationMatrix(axis2, c1, s1, rot2)\x1b[m\x1b[K;\n'}
+[27.649748] (rby1_teleop_cpp) StderrLine: {'line': b'      |       \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[27.649770] (rby1_teleop_cpp) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/spatial/se3-tpl.hpp:13\x1b[m\x1b[K,\n'}
+[27.649791] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/spatial/se3.hpp:47\x1b[m\x1b[K,\n'}
+[27.649812] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/model.hpp:10\x1b[m\x1b[K,\n'}
+[27.649832] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf.hpp:9\x1b[m\x1b[K,\n'}
+[27.649855] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/hsw/rby1_rviz/teleop_ik.cpp:9\x1b[m\x1b[K:\n'}
+[27.649876] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/math/rotation.hpp:26:8:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kby argument 4 of type \xe2\x80\x98\x1b[01m\x1b[Kconst Eigen::MatrixBase<Eigen::Matrix<double, 3, 3> >&\x1b[m\x1b[K\xe2\x80\x99 to \xe2\x80\x98\x1b[01m\x1b[Kvoid pinocchio::toRotationMatrix(const Eigen::MatrixBase<Derived>&, const Scalar&, const Scalar&, const Eigen::MatrixBase<OtherDerived>&) [with Vector3 = Eigen::Matrix<double, 3, 1>; Scalar = double; Matrix3 = Eigen::Matrix<double, 3, 3>]\x1b[m\x1b[K\xe2\x80\x99 declared here\n'}
+[27.649899] (rby1_teleop_cpp) StderrLine: {'line': b'   26 |   void \x1b[01;36m\x1b[KtoRotationMatrix\x1b[m\x1b[K(\n'}
+[27.649920] (rby1_teleop_cpp) StderrLine: {'line': b'      |        \x1b[01;36m\x1b[K^~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[27.649941] (rby1_teleop_cpp) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joints.hpp:23\x1b[m\x1b[K,\n'}
+[27.649962] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-collection.hpp:9\x1b[m\x1b[K,\n'}
+[27.649982] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-generic.hpp:8\x1b[m\x1b[K,\n'}
+[27.650003] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/model.hpp:17\x1b[m\x1b[K,\n'}
+[27.650028] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/openrobots/include/pinocchio/parsers/urdf.hpp:9\x1b[m\x1b[K,\n'}
+[27.650053] (rby1_teleop_cpp) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/hsw/rby1_rviz/teleop_ik.cpp:9\x1b[m\x1b[K:\n'}
+[27.650073] (rby1_teleop_cpp) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/openrobots/include/pinocchio/multibody/joint/joint-universal.hpp:486:21:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krot2\x1b[m\x1b[K\xe2\x80\x99 declared here\n'}
+[27.650094] (rby1_teleop_cpp) StderrLine: {'line': b'  486 |       Matrix3 rot1, \x1b[01;36m\x1b[Krot2\x1b[m\x1b[K;\n'}
+[27.650115] (rby1_teleop_cpp) StderrLine: {'line': b'      |                     \x1b[01;36m\x1b[K^~~~\x1b[m\x1b[K\n'}
+[27.674968] (-) TimerEvent: {}
+[27.775169] (-) TimerEvent: {}
+[27.875392] (-) TimerEvent: {}
+[27.975682] (-) TimerEvent: {}
+[28.075907] (-) TimerEvent: {}
+[28.176224] (-) TimerEvent: {}
+[28.276490] (-) TimerEvent: {}
+[28.376722] (-) TimerEvent: {}
+[28.476997] (-) TimerEvent: {}
+[28.577249] (-) TimerEvent: {}
+[28.677529] (-) TimerEvent: {}
+[28.777775] (-) TimerEvent: {}
+[28.878037] (-) TimerEvent: {}
+[28.978293] (-) TimerEvent: {}
+[29.078592] (-) TimerEvent: {}
+[29.178873] (-) TimerEvent: {}
+[29.279111] (-) TimerEvent: {}
+[29.379401] (-) TimerEvent: {}
+[29.479696] (-) TimerEvent: {}
+[29.579957] (-) TimerEvent: {}
+[29.680254] (-) TimerEvent: {}
+[29.780533] (-) TimerEvent: {}
+[29.880794] (-) TimerEvent: {}
+[29.981130] (-) TimerEvent: {}
+[30.081334] (-) TimerEvent: {}
+[30.181569] (-) TimerEvent: {}
+[30.281794] (-) TimerEvent: {}
+[30.381990] (-) TimerEvent: {}
+[30.482548] (-) TimerEvent: {}
+[30.582806] (-) TimerEvent: {}
+[30.683048] (-) TimerEvent: {}
+[30.783275] (-) TimerEvent: {}
+[30.883489] (-) TimerEvent: {}
+[30.983750] (-) TimerEvent: {}
+[31.083998] (-) TimerEvent: {}
+[31.184214] (-) TimerEvent: {}
+[31.284461] (-) TimerEvent: {}
+[31.384734] (-) TimerEvent: {}
+[31.484962] (-) TimerEvent: {}
+[31.585216] (-) TimerEvent: {}
+[31.685475] (-) TimerEvent: {}
+[31.785704] (-) TimerEvent: {}
+[31.885989] (-) TimerEvent: {}
+[31.986222] (-) TimerEvent: {}
+[32.086507] (-) TimerEvent: {}
+[32.186778] (-) TimerEvent: {}
+[32.287110] (-) TimerEvent: {}
+[32.290701] (rby1_teleop_cpp) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable teleop_ik_node\x1b[0m\n'}
+[32.387201] (-) TimerEvent: {}
+[32.442754] (rby1_teleop_cpp) StdoutLine: {'line': b'[100%] Built target teleop_ik_node\n'}
+[32.451476] (rby1_teleop_cpp) CommandEnded: {'returncode': 0}
+[32.451928] (rby1_teleop_cpp) JobProgress: {'identifier': 'rby1_teleop_cpp', 'progress': 'install'}
+[32.457818] (rby1_teleop_cpp) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/hsw/rby1_rviz/build/rby1_teleop_cpp'], 'cwd': '/home/hsw/rby1_rviz/build/rby1_teleop_cpp', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('PYTHON_BASIC_REPL', '1'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('LANGUAGE', 'en_US:en'), ('USER', 'hsw'), ('LC_TIME', 'ko_KR.UTF-8'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/openrobots/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/hsw'), ('CHROME_DESKTOP', 'code.desktop'), ('TERM_PROGRAM_VERSION', '1.107.1'), ('DESKTOP_SESSION', 'ubuntu-xorg'), ('NVM_BIN', '/home/hsw/.nvm/versions/node/v24.3.0/bin'), ('NVM_INC', '/home/hsw/.nvm/versions/node/v24.3.0/include/node'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('LC_MONETARY', 'ko_KR.UTF-8'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('MANAGERPID', '2712'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('SYSTEMD_EXEC_PID', '3259'), ('BUNDLED_DEBUGPY_PATH', '/home/hsw/.vscode/extensions/ms-python.debugpy-2025.18.0-linux-x64/bundled/libs/debugpy'), ('VSCODE_PYTHON_AUTOACTIVATE_GUARD', '1'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '4415'), ('NVM_DIR', '/home/hsw/.nvm'), ('COLCON_PREFIX_PATH', '/home/hsw/rby1_rviz/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'fcitx'), ('LOGNAME', 'hsw'), ('JOURNAL_STREAM', '8:27806'), ('_', '/home/hsw/.local/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('GEMINI_CLI_IDE_WORKSPACE_PATH', '/home/hsw/rby1_rviz'), ('USERNAME', 'hsw'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '0'), ('GEMINI_CLI_IDE_SERVER_PORT', '38899'), ('WINDOWPATH', '2'), ('PATH', '/home/hsw/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/hsw/.config/Code/User/globalStorage/github.copilot-chat/copilotCli:/home/hsw/.local/bin:/home/hsw/.nvm/versions/node/v24.3.0/bin:/opt/ros/humble/bin:/home/hsw/.cargo/bin:/home/hsw/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/hsw/.vscode/extensions/ms-python.debugpy-2025.18.0-linux-x64/bundled/scripts/noConfigScripts'), ('SESSION_MANAGER', 'local/hsw-Legion-5-15IRX9:@/tmp/.ICE-unix/3226,unix/hsw-Legion-5-15IRX9:/tmp/.ICE-unix/3226'), ('INVOCATION_ID', '63daceb789194f19b72e369c50bbee8c'), ('PAPERSIZE', 'a4'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'ko_KR.UTF-8'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'x11'), ('DISPLAY', ':0'), ('VSCODE_DEBUGPY_ADAPTER_ENDPOINTS', '/home/hsw/.vscode/extensions/ms-python.debugpy-2025.18.0-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-e8334eab54c29228.txt'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('PYTHONSTARTUP', '/home/hsw/.config/Code/User/workspaceStorage/98d29c7c6cd006f5ddc200a9da06ddb3/ms-python.python/pythonrc.py'), ('LC_TELEPHONE', 'ko_KR.UTF-8'), ('RMW_IMPLEMENTATION', 'rmw_cyclonedds_cpp'), ('XMODIFIERS', '@im=fcitx'), ('XDG_SESSION_DESKTOP', 'ubuntu-xorg'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-cdfa96f802.sock'), ('TERM_PROGRAM', 'vscode'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/hsw/rby1_rviz/install/rby1_teleop_cpp:/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LC_NAME', 'ko_KR.UTF-8'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu-xorg'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'ko_KR.UTF-8'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('LC_IDENTIFICATION', 'ko_KR.UTF-8'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('QT_IM_MODULE', 'fcitx'), ('GEMINI_CLI_IDE_AUTH_TOKEN', '2242a927-13a4-4984-9e74-e63ca14dfb09'), ('PWD', '/home/hsw/rby1_rviz/build/rby1_teleop_cpp'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu-xorg:/etc/xdg'), ('GEMINI_API_KEY', 'AIzaSyDL-m-a1CuctYZ15wnY8hEybhdco0FqGFs'), ('CLUTTER_IM_MODULE', 'xim'), ('NVM_CD_FLAGS', ''), ('XDG_DATA_DIRS', '/usr/share/ubuntu-xorg:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LC_NUMERIC', 'ko_KR.UTF-8'), ('LC_PAPER', 'ko_KR.UTF-8'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/home/hsw/rby1_rviz/install/rby1_teleop_cpp:/opt/ros/humble')]), 'shell': False}
+[32.466510] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[32.466672] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Installing: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/lib/rby1_teleop_cpp/teleop_ik_node\n'}
+[32.468715] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Set runtime path of "/home/hsw/rby1_rviz/install/rby1_teleop_cpp/lib/rby1_teleop_cpp/teleop_ik_node" to ""\n'}
+[32.468778] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Installing: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/ament_index/resource_index/package_run_dependencies/rby1_teleop_cpp\n'}
+[32.468889] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Up-to-date: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/ament_index/resource_index/parent_prefix_path/rby1_teleop_cpp\n'}
+[32.468945] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Up-to-date: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/environment/ament_prefix_path.sh\n'}
+[32.468996] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Installing: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/environment/ament_prefix_path.dsv\n'}
+[32.469081] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Up-to-date: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/environment/path.sh\n'}
+[32.469192] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Installing: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/environment/path.dsv\n'}
+[32.469244] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Up-to-date: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/local_setup.bash\n'}
+[32.469314] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Up-to-date: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/local_setup.sh\n'}
+[32.469364] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Up-to-date: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/local_setup.zsh\n'}
+[32.469413] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Installing: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/local_setup.dsv\n'}
+[32.469461] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Installing: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/package.dsv\n'}
+[32.469511] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Up-to-date: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/ament_index/resource_index/packages/rby1_teleop_cpp\n'}
+[32.469605] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Up-to-date: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/cmake/rby1_teleop_cppConfig.cmake\n'}
+[32.469654] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Up-to-date: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/cmake/rby1_teleop_cppConfig-version.cmake\n'}
+[32.469699] (rby1_teleop_cpp) StdoutLine: {'line': b'-- Installing: /home/hsw/rby1_rviz/install/rby1_teleop_cpp/share/rby1_teleop_cpp/package.xml\n'}
+[32.471148] (rby1_teleop_cpp) CommandEnded: {'returncode': 0}
+[32.487350] (-) TimerEvent: {}
+[32.487758] (rby1_teleop_cpp) JobEnded: {'identifier': 'rby1_teleop_cpp', 'rc': 0}
+[32.488401] (-) EventReactorShutdown: {}
