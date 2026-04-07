@@ -1,2 +1,0 @@
-Invoking command in '/home/hsw/rby1_rviz/build/rby1_teleop_cpp': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hsw/rby1_rviz -DCMAKE_INSTALL_PREFIX=/home/hsw/rby1_rviz/install/rby1_teleop_cpp
-Invoked command in '/home/hsw/rby1_rviz/build/rby1_teleop_cpp' returned '1': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hsw/rby1_rviz -DCMAKE_INSTALL_PREFIX=/home/hsw/rby1_rviz/install/rby1_teleop_cpp
