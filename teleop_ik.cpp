@@ -5,6 +5,7 @@
 #include <tf2_ros/transform_broadcaster.h>
 #include <std_srvs/srv/set_bool.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
+#include <ament_index_cpp/get_package_share_directory.hpp>
 
 #include <pinocchio/parsers/urdf.hpp>
 #include <pinocchio/algorithm/kinematics.hpp>
@@ -19,8 +20,13 @@
 
 class TeleopIKNode : public rclcpp::Node {
 public:
-    TeleopIKNode(const std::string& urdf_path) : Node("teleop_ik_node"), urdf_path_(urdf_path) {
-        // Pinocchio 모델 로드
+    TeleopIKNode() : Node("teleop_ik_node") {
+        
+        std::string pkg_share_path = ament_index_cpp::get_package_share_directory("rby1_rviz");
+        urdf_path_ = pkg_share_path + "/model/model_v1.2.urdf";
+        
+        RCLCPP_INFO(this->get_logger(), "동적 로드된 URDF: %s", urdf_path_.c_str());
+
         pinocchio::urdf::buildModel(urdf_path_, model_);
         data_ = pinocchio::Data(model_);
         current_q_ = pinocchio::neutral(model_);
@@ -324,9 +330,7 @@ private:
 
 int main(int argc, char** argv) {
     rclcpp::init(argc, argv);
-    std::string urdf = "/home/hsw/rby1_rviz/model/model_v1.2.urdf";
-    if (argc > 1) urdf = argv[1];
-    auto node = std::make_shared<TeleopIKNode>(urdf);
+    auto node = std::make_shared<TeleopIKNode>();
     rclcpp::spin(node);
     rclcpp::shutdown();
     return 0;

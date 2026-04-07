@@ -17,6 +17,7 @@ list(APPEND CMAKE_PREFIX_PATH "/opt/openrobots")
 
 # Dependencies
 find_package(ament_cmake REQUIRED)
+find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
@@ -46,11 +47,15 @@ target_include_directories(teleop_ik_node PRIVATE
 )
 target_link_libraries(teleop_ik_node
   ${pinocchio_LIBRARIES}
+  ament_index_cpp::ament_index_cpp
 )
 
 install(TARGETS
   teleop_ik_node
   DESTINATION lib/${PROJECT_NAME}
+)
+install(DIRECTORY model
+  DESTINATION share/${PROJECT_NAME}
 )
 
 ament_package()
