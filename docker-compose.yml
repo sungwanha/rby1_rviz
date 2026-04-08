@@ -10,7 +10,7 @@ services:
     stdin_open: true
     tty: true
     environment:
-      - ROS_DOMAIN_ID=22
+      - ROS_DOMAIN_ID=52
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
     volumes:

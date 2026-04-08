@@ -22,7 +22,7 @@ class TeleopIKNode : public rclcpp::Node {
 public:
     TeleopIKNode() : Node("teleop_ik_node") {
         
-        std::string pkg_share_path = ament_index_cpp::get_package_share_directory("rby1_rviz");
+        std::string pkg_share_path = ament_index_cpp::get_package_share_directory("rby1_teleop_cpp");
         urdf_path_ = pkg_share_path + "/model/model_v1.2.urdf";
         
         RCLCPP_INFO(this->get_logger(), "동적 로드된 URDF: %s", urdf_path_.c_str());
@@ -104,7 +104,7 @@ private:
 
     // --- Joint State 콜백: Teleop Off일 때 현재 로봇 자세 동기화 ---
     void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg) {
-        if (teleop_enabled_) return;
+        if (teleop_enabled_) return; // Teleop On 상태에서는 로봇이 HMD를 따라가므로 동기화 중지
 
         for (size_t i = 0; i < msg->name.size(); ++i) {
             const std::string& name = msg->name[i];
@@ -149,6 +149,7 @@ private:
         bool right_tracking = data[6] > 0.5;
         bool left_tracking = data[13] > 0.5;
 
+        // 트래킹이 끊기면 다음 연결 시 다시 오프셋을 초기화하도록 설정
         if (!right_tracking) first_tracking_right_ = true;
         if (!left_tracking) first_tracking_left_ = true;
 
@@ -181,25 +182,57 @@ private:
         // --- 오프셋 및 보간 타겟 초기화 ---
         if (right_tracking && first_tracking_right_) {
             auto id_ee_r = model_.getFrameId("ee_right");
-            M_offset_r_ = oM_head.actInv(data_.oMf[id_ee_r]) * M_hmd_r.inverse();
+            
+            initial_hmd_r_ = M_hmd_r;
+            initial_ee_r_ = oM_head.actInv(data_.oMf[id_ee_r]); // Head 프레임 기준 초기 로봇 EE
+            
             smoothed_target_r_ = data_.oMf[id_ee_r];
             first_tracking_right_ = false;
         }
         if (left_tracking && first_tracking_left_) {
             auto id_ee_l = model_.getFrameId("ee_left");
-            M_offset_l_ = oM_head.actInv(data_.oMf[id_ee_l]) * M_hmd_l.inverse();
+            
+            initial_hmd_l_ = M_hmd_l;
+            initial_ee_l_ = oM_head.actInv(data_.oMf[id_ee_l]); // Head 프레임 기준 초기 로봇 EE
+            
             smoothed_target_l_ = data_.oMf[id_ee_l];
             first_tracking_left_ = false;
         }
 
+        // --- 변위(Delta) 기반 타겟 계산 ---
+        pinocchio::SE3 target_r_raw = smoothed_target_r_;
+        if (right_tracking && !first_tracking_right_) {
+            // 위치 변위 및 회전 변위 분리 계산
+            Eigen::Vector3d delta_p = M_hmd_r.translation() - initial_hmd_r_.translation();
+            Eigen::Matrix3d delta_R = M_hmd_r.rotation() * initial_hmd_r_.rotation().transpose();
+
+            pinocchio::SE3 target_r_relative;
+            target_r_relative.translation() = initial_ee_r_.translation() + delta_p;
+            target_r_relative.rotation() = delta_R * initial_ee_r_.rotation();
+
+            // Head 프레임을 곱해 Base 프레임 기준 타겟으로 변환
+            target_r_raw = oM_head * target_r_relative;
+        }
+
+        pinocchio::SE3 target_l_raw = smoothed_target_l_;
+        if (left_tracking && !first_tracking_left_) {
+            // 위치 변위 및 회전 변위 분리 계산
+            Eigen::Vector3d delta_p = M_hmd_l.translation() - initial_hmd_l_.translation();
+            Eigen::Matrix3d delta_R = M_hmd_l.rotation() * initial_hmd_l_.rotation().transpose();
+
+            pinocchio::SE3 target_l_relative;
+            target_l_relative.translation() = initial_ee_l_.translation() + delta_p;
+            target_l_relative.rotation() = delta_R * initial_ee_l_.rotation();
+
+            // Head 프레임을 곱해 Base 프레임 기준 타겟으로 변환
+            target_l_raw = oM_head * target_l_relative;
+        }
+
         // 보간 적용 (Rate Limiting)
-        pinocchio::SE3 target_r_raw = oM_head * M_offset_r_ * M_hmd_r;
-        pinocchio::SE3 target_l_raw = oM_head * M_offset_l_ * M_hmd_l;
+        if (right_tracking) smoothed_target_r_ = limit_target_step(smoothed_target_r_, target_r_raw);
+        if (left_tracking) smoothed_target_l_ = limit_target_step(smoothed_target_l_, target_l_raw);
 
-        smoothed_target_r_ = limit_target_step(smoothed_target_r_, target_r_raw);
-        smoothed_target_l_ = limit_target_step(smoothed_target_l_, target_l_raw);
-
-        // 시각화
+        // 시각화 (TF Broadcaster)
         if (right_tracking) broadcast_target_tf("base", "target_right", smoothed_target_r_);
         if (left_tracking) broadcast_target_tf("base", "target_left", smoothed_target_l_);
 
@@ -315,7 +348,11 @@ private:
 
     bool teleop_enabled_ = false;
     bool first_tracking_right_ = true, first_tracking_left_ = true;
-    pinocchio::SE3 M_offset_r_, M_offset_l_, smoothed_target_r_, smoothed_target_l_;
+    
+    // 수정된 부분: 조종기 및 로봇 EE의 초기 포즈 저장 변수
+    pinocchio::SE3 initial_hmd_r_, initial_ee_r_;
+    pinocchio::SE3 initial_hmd_l_, initial_ee_l_;
+    pinocchio::SE3 smoothed_target_r_, smoothed_target_l_;
     
     double dt_ = 0.5, damp_ = 1e-6;
     double max_lin_step_ = 0.03, max_ang_step_ = 0.1; // 보간 제한값
