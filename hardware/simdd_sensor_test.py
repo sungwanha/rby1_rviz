@@ -1,195 +1,85 @@
-#include <Wire.h>
+#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import Joy  # 조이스틱/트리거 전용 표준 메시지
+import serial
+import serial.tools.list_ports
 
-#define SDA_PIN 6
-#define SCL_PIN 5
-#define AS5600_ADDR 0x36
+class TriggerBridge(Node):
+    def __init__(self):
+        super().__init__('trigger_bridge_node')
+        
+        # 메시지 타입을 Joy로 변경
+        self.left_pub = self.create_publisher(Joy, '/simdd/trigger_left', 10)
+        self.right_pub = self.create_publisher(Joy, '/simdd/trigger_right', 10)
+        
+        self.connections = {}
+        self.baud_rate = 115200
+        
+        self.create_timer(2.0, self.update_connections)
+        self.create_timer(0.01, self.read_serial_data)
+        
+        self.get_logger().info("ROS 2 Trigger Bridge Started (Joy/Standard Mode)")
 
-// ====== 사용자 조정 변수 ======
-const float ROTATION_DEG_FOR_TRAVEL = 80.0;   // 몇 도 회전할 때
-const float LINEAR_TRAVEL_MM        = 80.0;   // 몇 mm 이동하는지
+    def update_connections(self):
+        active_ports = [p.device for p in serial.tools.list_ports.comports()]
+        closed_ports = [p for p in self.connections if p not in active_ports]
+        for port in closed_ports:
+            self.connections[port].close()
+            del self.connections[port]
+            
+        for port in active_ports:
+            if port not in self.connections:
+                try:
+                    new_ser = serial.Serial(port, self.baud_rate, timeout=0.1)
+                    self.connections[port] = new_ser
+                    self.get_logger().info(f"Connected to {port}")
+                except:
+                    pass
 
-const float ZERO_OFFSET_DEG = 266.75;            // 영점 보정값(필요시 수정)
-const bool INVERT_DIRECTION = false;          // 방향 반전 필요하면 true
-// ==============================
+    def read_serial_data(self):
+        for port, ser in list(self.connections.items()):
+            try:
+                if ser.in_waiting > 0:
+                    line = ser.readline().decode('utf-8').strip()
+                    if not line: continue
+                    
+                    data = line.split(',')
+                    if len(data) >= 2:
+                        board_id = data[0].strip()
+                        try:
+                            norm_value = float(data[-1].strip())
+                            
+                            # Joy 메시지 생성
+                            msg = Joy()
+                            msg.header.stamp = self.get_clock().now().to_msg()
+                            msg.header.frame_id = "trigger_link"
+                            
+                            # 트리거 값은 '축(axes)' 데이터의 첫 번째 요소로 할당
+                            msg.axes = [norm_value]
+                            msg.buttons = [] # 버튼은 비워둠
 
-uint16_t readRawAngle() {
-  Wire.beginTransmission(AS5600_ADDR);
-  Wire.write(0x0C);  // RAW ANGLE high byte
-  if (Wire.endTransmission(false) != 0) {
-    return 0xFFFF;
-  }
+                            if "LEFT" in board_id:
+                                self.left_pub.publish(msg)
+                            elif "RIGHT" in board_id:
+                                self.right_pub.publish(msg)
+                                
+                        except ValueError:
+                            continue
+            except Exception:
+                if port in self.connections:
+                    del self.connections[port]
 
-  if (Wire.requestFrom(AS5600_ADDR, (uint8_t)2) != 2) {
-    return 0xFFFF;
-  }
+def main(args=None):
+    rclpy.init(args=args)
+    node = TriggerBridge()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
 
-  uint8_t highByte = Wire.read();
-  uint8_t lowByte  = Wire.read();
-
-  return ((highByte << 8) | lowByte) & 0x0FFF;
-}
-
-float rawToAngleDeg(uint16_t raw) {
-  return raw * 360.0f / 4096.0f;
-}
-
-float getAdjustedAngle(float angleDeg) {
-  float adjustedAngle = angleDeg - ZERO_OFFSET_DEG;
-
-  if (INVERT_DIRECTION) {
-    adjustedAngle = -adjustedAngle;
-  }
-
-  return adjustedAngle;
-}
-
-float angleToLinearMM(float angleDeg) {
-  float adjustedAngle = getAdjustedAngle(angleDeg);
-  float mmPerDeg = LINEAR_TRAVEL_MM / ROTATION_DEG_FOR_TRAVEL;
-  return adjustedAngle * mmPerDeg;
-}
-
-float angleToNormalized(float angleDeg) {
-  float adjustedAngle = getAdjustedAngle(angleDeg);
-
-  float normalized = adjustedAngle / ROTATION_DEG_FOR_TRAVEL;
-
-  // 0~1 범위로 제한
-  if (normalized < 0.0f) normalized = 0.0f;
-  if (normalized > 1.0f) normalized = 1.0f;
-
-  return normalized;
-}
-
-void setup() {
-  Serial.begin(115200);
-  Wire.begin(SDA_PIN, SCL_PIN);
-  Wire.setClock(100000);
-
-  Serial.println("AS5600 Normalized Position Start");
-}
-
-void loop() {
-  uint16_t raw = readRawAngle();
-
-  if (raw == 0xFFFF) {
-    Serial.println("Read error");
-  } else {
-    float angleDeg    = rawToAngleDeg(raw);
-    float positionMM  = angleToLinearMM(angleDeg);
-    float normalized  = angleToNormalized(angleDeg);
-
-    Serial.print("RAW: ");
-    Serial.print(raw);
-
-    Serial.print("  Angle: ");
-    Serial.print(angleDeg, 2);
-    Serial.print(" deg");
-
-    Serial.print("  Position: ");
-    Serial.print(positionMM, 2);
-    Serial.print(" mm");
-
-    Serial.print("  Normalized: ");
-    Serial.println(normalized, 4);
-  }
-
-  delay(200);
-}[오후 2:38]#include <Wire.h>
-
-#define SDA_PIN 6
-#define SCL_PIN 5
-#define AS5600_ADDR 0x36
-
-// ====== 사용자 조정 변수 ======
-const float ROTATION_DEG_FOR_TRAVEL = 80.0;   // 몇 도 회전할 때
-const float LINEAR_TRAVEL_MM        = 80.0;   // 몇 mm 이동하는지
-
-const float ZERO_OFFSET_DEG = 266.75;            // 영점 보정값(필요시 수정)
-const bool INVERT_DIRECTION = false;          // 방향 반전 필요하면 true
-// ==============================
-
-uint16_t readRawAngle() {
-  Wire.beginTransmission(AS5600_ADDR);
-  Wire.write(0x0C);  // RAW ANGLE high byte
-  if (Wire.endTransmission(false) != 0) {
-    return 0xFFFF;
-  }
-
-  if (Wire.requestFrom(AS5600_ADDR, (uint8_t)2) != 2) {
-    return 0xFFFF;
-  }
-
-  uint8_t highByte = Wire.read();
-  uint8_t lowByte  = Wire.read();
-
-  return ((highByte << 8) | lowByte) & 0x0FFF;
-}
-
-float rawToAngleDeg(uint16_t raw) {
-  return raw * 360.0f / 4096.0f;
-}
-
-float getAdjustedAngle(float angleDeg) {
-  float adjustedAngle = angleDeg - ZERO_OFFSET_DEG;
-
-  if (INVERT_DIRECTION) {
-    adjustedAngle = -adjustedAngle;
-  }
-
-  return adjustedAngle;
-}
-
-float angleToLinearMM(float angleDeg) {
-  float adjustedAngle = getAdjustedAngle(angleDeg);
-  float mmPerDeg = LINEAR_TRAVEL_MM / ROTATION_DEG_FOR_TRAVEL;
-  return adjustedAngle * mmPerDeg;
-}
-
-float angleToNormalized(float angleDeg) {
-  float adjustedAngle = getAdjustedAngle(angleDeg);
-
-  float normalized = adjustedAngle / ROTATION_DEG_FOR_TRAVEL;
-
-  // 0~1 범위로 제한
-  if (normalized < 0.0f) normalized = 0.0f;
-  if (normalized > 1.0f) normalized = 1.0f;
-
-  return normalized;
-}
-
-void setup() {
-  Serial.begin(115200);
-  Wire.begin(SDA_PIN, SCL_PIN);
-  Wire.setClock(100000);
-
-  Serial.println("AS5600 Normalized Position Start");
-}
-
-void loop() {
-  uint16_t raw = readRawAngle();
-
-  if (raw == 0xFFFF) {
-    Serial.println("Read error");
-  } else {
-    float angleDeg    = rawToAngleDeg(raw);
-    float positionMM  = angleToLinearMM(angleDeg);
-    float normalized  = angleToNormalized(angleDeg);
-
-    Serial.print("RAW: ");
-    Serial.print(raw);
-
-    Serial.print("  Angle: ");
-    Serial.print(angleDeg, 2);
-    Serial.print(" deg");
-
-    Serial.print("  Position: ");
-    Serial.print(positionMM, 2);
-    Serial.print(" mm");
-
-    Serial.print("  Normalized: ");
-    Serial.println(normalized, 4);
-  }
-
-  delay(200);
-}
+if __name__ == '__main__':
+    main()

@@ -930,7 +930,7 @@
     <joint name="tool_right" type="fixed">
         <parent link="link_right_arm_6" />
         <child link="ee_right" />
-        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.1261" />
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 -0.1611" />
         <axis xyz="0 0 1" />
     </joint>
 
@@ -953,7 +953,7 @@
     <joint name="tool_left" type="fixed">
         <parent link="link_left_arm_6" />
         <child link="ee_left" />
-        <origin rpy="0.0 0.0 0" xyz="0.0 0.0 -0.1261" />
+        <origin rpy="0.0 0.0 0" xyz="0.0 0.0 -0.1611" />
         <axis xyz="0 0 1" />
     </joint>
 
@@ -1019,14 +1019,14 @@
         <parent link="link_head_2_offset" />
         <child link="zed2i_right_camera_optical_frame" />
         
-        <origin xyz="0 -0.060 0" rpy="0 0 0" />
+        <origin xyz="0 -0.060 0" rpy="-1.5708 0 -1.5708" />
     </joint>
 
     <link name="zed2i_left_camera_optical_frame" />
     <joint name="zed2i_left_camera_optical_joint" type="fixed">
         <parent link="link_head_2_offset" />
         <child link="zed2i_left_camera_optical_frame" />
-        <origin xyz="0 0.060 0" rpy="0 0 0" />
+        <origin xyz="0 0.060 0" rpy="-1.5708 0 -1.5708" />
     </joint>
 
     <!-- <joint name="head_mount" type="fixed">
