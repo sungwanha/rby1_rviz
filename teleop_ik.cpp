@@ -6,6 +6,7 @@
 #include <std_srvs/srv/set_bool.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include <std_msgs/msg/float32.hpp>
 
 #include <pinocchio/parsers/urdf.hpp>
 #include <pinocchio/algorithm/kinematics.hpp>
@@ -17,302 +18,203 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <chrono>
 
 using namespace std::chrono_literals;
 
 class TeleopIKNode : public rclcpp::Node {
 public:
     TeleopIKNode() : Node("teleop_ik_node") {
-        
-        // --- [설정] 오프셋 파라미터 초기값 설정 ---
-        r_off_xyz_ = {-0.0073, 0.0039, -0.0720}; 
-        r_off_rpy_ = {98.99, 0.30, 163.89}; 
-
-        l_off_xyz_ = {-0.0073, -0.0051, -0.0720}; 
-        l_off_rpy_ = {-97.58, 1.71, 15.36};  
-
-        last_print_time_ = this->now();
-
-        // URDF 로드
+        RCLCPP_INFO(this->get_logger(), "노드 시작 중...");
+        // 1. URDF 로드 및 Pinocchio 모델 설정
         std::string pkg_share_path = ament_index_cpp::get_package_share_directory("rby1_teleop_cpp");
-        urdf_path_ = pkg_share_path + "/model/model_v1.2.urdf";
+        std::string urdf_path = pkg_share_path + "/model/model_v1.2.urdf";
+        RCLCPP_INFO(this->get_logger(), "URDF 로드 시도: %s", urdf_path.c_str());
         
-        RCLCPP_INFO(this->get_logger(), "동적 로드된 URDF: %s", urdf_path_.c_str());
-
-        pinocchio::urdf::buildModel(urdf_path_, model_);
+        pinocchio::urdf::buildModel(urdf_path, model_);
+        RCLCPP_INFO(this->get_logger(), "모델 빌드 성공!");
         data_ = pinocchio::Data(model_);
-        current_q_ = pinocchio::neutral(model_);
+        current_q_ = pinocchio::neutral(model_); // 기본 0점 자세
 
-        // --- 안전한 초기 자세(Home Position) 강제 설정 ---
-        for (int i = 1; i < model_.njoints; ++i) {
-            std::string name = model_.names[i];
-            if (name == "head_1") current_q_[model_.joints[i].idx_q()] = 1.570;
-            else if (name == "left_arm_3") current_q_[model_.joints[i].idx_q()] = -1.570;
-            else if (name == "left_arm_6") current_q_[model_.joints[i].idx_q()] = -1.570;
-            else if (name == "right_arm_3") current_q_[model_.joints[i].idx_q()] = -1.570;
-            else if (name == "right_arm_6") current_q_[model_.joints[i].idx_q()] = 1.570;
-        }
+        // 2. 팔 파라미터(End-effector 및 Root Joint) 자동 탐색
+        setup_arm_info("ee_left", root_joint_l_, max_arm_length_l_);
+        setup_arm_info("ee_right", root_joint_r_, max_arm_length_r_);
 
-        q_nominal_ = current_q_; 
-        
-        for (int i = 1; i < model_.njoints; ++i) {
-            std::string name = model_.names[i];
-            if (model_.joints[i].nq() == 1) {
-                joint_names_.push_back(name);
-                int idx_q = model_.joints[i].idx_q();
-                double lower = model_.lowerPositionLimit[idx_q];
-                double upper = model_.upperPositionLimit[idx_q];
-                joint_limits_[name] = {lower, upper, idx_q};
-            }
-        }
-
-        // 고정 조인트 설정
-        std::vector<std::string> locked_keywords = {"torso", "head", "wheel"};
-        for (int i = 1; i < model_.njoints; ++i) {
-            bool locked = false;
-            for (const auto& kw : locked_keywords) {
-                if (model_.names[i].find(kw) != std::string::npos) { locked = true; break; }
-            }
-            if (locked) {
-                int nv = model_.joints[i].nv();
-                int idx_v = model_.joints[i].idx_v();
-                for (int v_i = 0; v_i < nv; ++v_i) locked_v_indices_.push_back(idx_v + v_i);
-            }
-        }
-
-        // 팔 파라미터 계산
-        auto calc_arm_params = [&](const std::string& ee_frame, int& root_joint, double& length) {
-            length = 0.0;
-            if (!model_.existFrame(ee_frame)) return;
-            auto current_id = model_.getFrameId(ee_frame);
-            auto joint_id = model_.frames[current_id].parent;
-            root_joint = joint_id;
-            while (joint_id > 0) {
-                length += model_.jointPlacements[joint_id].translation().norm();
-                int parent_id = model_.parents[joint_id];
-                bool is_locked = false;
-                if (parent_id > 0) {
-                    for (int idx : locked_v_indices_) {
-                        int v_start = model_.joints[parent_id].idx_v();
-                        int nv = model_.joints[parent_id].nv();
-                        if (idx >= v_start && idx < v_start + nv) { is_locked = true; break; }
-                    }
-                }
-                if (parent_id == 0 || is_locked) break; 
-                root_joint = parent_id; joint_id = parent_id;
-            }
-            length *= 0.95; 
-        };
-        calc_arm_params("ee_right", root_joint_r_, max_arm_length_r_);
-        calc_arm_params("ee_left", root_joint_l_, max_arm_length_l_);
-
+        // 3. 퍼블리셔 / 구독자 설정
         tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
         pub_left_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/leader/master_arm_joint_left/joint_trajectory", 10);
         pub_right_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/leader/master_arm_joint_right/joint_trajectory", 10);
 
-        joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
-            "/joint_states", 10, std::bind(&TeleopIKNode::joint_state_callback, this, std::placeholders::_1));
-        teleop_service_ = this->create_service<std_srvs::srv::SetBool>(
-            "toggle_teleop", std::bind(&TeleopIKNode::teleop_toggle_callback, this, std::placeholders::_1, std::placeholders::_2));
-        
-        sub_left_ = this->create_subscription<geometry_msgs::msg::PoseStamped>(
-            "/simdd/pose_left", 10, [this](const geometry_msgs::msg::PoseStamped::SharedPtr msg) { left_pose_ = pose_to_se3(msg->pose); has_left_ = true; });
-        sub_right_ = this->create_subscription<geometry_msgs::msg::PoseStamped>(
-            "/simdd/pose_right", 10, [this](const geometry_msgs::msg::PoseStamped::SharedPtr msg) { right_pose_ = pose_to_se3(msg->pose); has_right_ = true; });
+        // Pose 구독
+        sub_pose_l_ = this->create_subscription<geometry_msgs::msg::PoseStamped>("/simdd/pose_left", 10, [this](const geometry_msgs::msg::PoseStamped::SharedPtr msg) { left_pose_ = pose_to_se3(msg->pose); has_left_ = true; });
+        sub_pose_r_ = this->create_subscription<geometry_msgs::msg::PoseStamped>("/simdd/pose_right", 10, [this](const geometry_msgs::msg::PoseStamped::SharedPtr msg) { right_pose_ = pose_to_se3(msg->pose); has_right_ = true; });
 
-        joint_state_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("/joint_states", 10);
+        // 트리거 구독 (독립 토픽)
+        sub_trig_l_ = this->create_subscription<std_msgs::msg::Float32>("/simdd/trigger_left", 10, [this](const std_msgs::msg::Float32::SharedPtr msg) { left_trig_val_ = msg->data; });
+        sub_trig_r_ = this->create_subscription<std_msgs::msg::Float32>("/simdd/trigger_right", 10, [this](const std_msgs::msg::Float32::SharedPtr msg) { right_trig_val_ = msg->data; });
 
-        ik_timer_ = this->create_wall_timer(20ms, std::bind(&TeleopIKNode::update_ik, this));
+        // 상태 업데이트
+        sub_js_ = this->create_subscription<sensor_msgs::msg::JointState>("/joint_states", 10, [this](const sensor_msgs::msg::JointState::SharedPtr msg) {
+            if (!teleop_enabled_) {
+                for (size_t i = 0; i < msg->name.size(); ++i) {
+                    if (model_.existJointName(msg->name[i])) {
+                        auto j_id = model_.getJointId(msg->name[i]);
+                        current_q_[model_.joints[j_id].idx_q()] = msg->position[i];
+                    }
+                }
+            }
+        });
+
+        srv_toggle_ = this->create_service<std_srvs::srv::SetBool>("toggle_teleop", [this](const std::shared_ptr<std_srvs::srv::SetBool::Request> req, std::shared_ptr<std_srvs::srv::SetBool::Response> res) {
+            teleop_enabled_ = req->data;
+            res->success = true;
+            res->message = teleop_enabled_ ? "Teleop ON" : "Teleop OFF";
+        });
+
+        // 4. IK 타이머 (100Hz)
+        ik_timer_ = this->create_wall_timer(10ms, std::bind(&TeleopIKNode::update_ik, this));
     }
 
 private:
-    Eigen::Vector3d r_off_xyz_, r_off_rpy_, l_off_xyz_, l_off_rpy_;
-
-    pinocchio::SE3 get_offset_se3(const Eigen::Vector3d& xyz, const Eigen::Vector3d& rpy_deg) {
-        double d2r = M_PI / 180.0;
-        Eigen::Matrix3d R = (Eigen::AngleAxisd(rpy_deg.z() * d2r, Eigen::Vector3d::UnitZ()) *
-                             Eigen::AngleAxisd(rpy_deg.y() * d2r, Eigen::Vector3d::UnitY()) *
-                             Eigen::AngleAxisd(rpy_deg.x() * d2r, Eigen::Vector3d::UnitX())).toRotationMatrix();
-        return pinocchio::SE3(R, Eigen::Vector3d::Zero()) * pinocchio::SE3(Eigen::Matrix3d::Identity(), xyz);
-    }
-
-    pinocchio::SE3 pose_to_se3(const geometry_msgs::msg::Pose& pose) {
-        Eigen::Vector3d t(pose.position.x, pose.position.y, pose.position.z);
-        Eigen::Quaterniond q(pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z);
-        return pinocchio::SE3(q.normalized().toRotationMatrix(), t);
-    }
-
-    void teleop_toggle_callback(const std::shared_ptr<std_srvs::srv::SetBool::Request> req, std::shared_ptr<std_srvs::srv::SetBool::Response> res) {
-        teleop_enabled_ = req->data;
-        res->success = true;
-        res->message = teleop_enabled_ ? "Enabled" : "Disabled";
-    }
-
-    void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg) {
-        if (teleop_enabled_) return; 
-        for (size_t i = 0; i < msg->name.size(); ++i) {
-            if (joint_limits_.count(msg->name[i])) current_q_[std::get<2>(joint_limits_[msg->name[i]])] = msg->position[i];
-            else if (msg->name[i] == "left_trigger") left_trigger_val_ = msg->position[i];
-            else if (msg->name[i] == "right_trigger") right_trigger_val_ = msg->position[i];
-        }
-    }
-
     void update_ik() {
-        // 1. RViz 시각화를 위한 현재 상태 퍼블리시
-        sensor_msgs::msg::JointState js_msg;
-        js_msg.header.stamp = this->now();
-        for (const auto& pair : joint_limits_) {
-            js_msg.name.push_back(pair.first);
-            js_msg.position.push_back(current_q_[std::get<2>(pair.second)]);
-        }
-        js_msg.name.push_back("left_trigger"); js_msg.position.push_back(left_trigger_val_);
-        js_msg.name.push_back("right_trigger"); js_msg.position.push_back(right_trigger_val_);
-        joint_state_pub_->publish(js_msg);
-
-        // 2. 텔레옵 비활성화 시 리턴
-        if (!teleop_enabled_ || (!has_right_ && !has_left_)) return;
+        if (!teleop_enabled_) return;
 
         pinocchio::forwardKinematics(model_, data_, current_q_);
         pinocchio::updateFramePlacements(model_, data_);
 
+        // 헤드 카메라 기준 좌표 변환 (zed2i_right_camera_optical_frame 등)
         auto head_id = model_.getFrameId("zed2i_right_camera_optical_frame");
         pinocchio::SE3 oM_head = data_.oMf[head_id];
-        pinocchio::SE3 T_off_r = get_offset_se3(r_off_xyz_, r_off_rpy_);
-        pinocchio::SE3 T_off_l = get_offset_se3(l_off_xyz_, l_off_rpy_);
 
-        // 🔥 3. 절대 위치 기반 타겟 생성 (오프셋 포함) 🔥
+        // --- IK 실행 (오른팔) ---
         if (has_right_) {
-            pinocchio::SE3 target = (oM_head * right_pose_) * T_off_r;
-            
-            // 팔 길이 제한
-            if (root_joint_r_ > 0) {
-                Eigen::Vector3d rel = target.translation() - data_.oMi[root_joint_r_].translation();
-                if (rel.norm() > max_arm_length_r_) {
-                    target.translation() = data_.oMi[root_joint_r_].translation() + rel.normalized() * max_arm_length_r_;
-                }
-            }
-            smoothed_target_r_ = target; 
-            broadcast_target_tf("base", "target_right", smoothed_target_r_);
+            pinocchio::SE3 target = (oM_head * right_pose_) * get_offset_se3(r_off_xyz_, r_off_rpy_);
+            limit_arm_extension(target, root_joint_r_, max_arm_length_r_);
+            solve_ik_single("ee_right", target);
+            broadcast_tf(target, "target_right");
         }
-        
+
+        // --- IK 실행 (왼팔) ---
         if (has_left_) {
-            pinocchio::SE3 target = (oM_head * left_pose_) * T_off_l;
-            
-            // 팔 길이 제한
-            if (root_joint_l_ > 0) {
-                Eigen::Vector3d rel = target.translation() - data_.oMi[root_joint_l_].translation();
-                if (rel.norm() > max_arm_length_l_) {
-                    target.translation() = data_.oMi[root_joint_l_].translation() + rel.normalized() * max_arm_length_l_;
-                }
-            }
-            smoothed_target_l_ = target;
-            broadcast_target_tf("base", "target_left", smoothed_target_l_);
+            pinocchio::SE3 target = (oM_head * left_pose_) * get_offset_se3(l_off_xyz_, l_off_rpy_);
+            limit_arm_extension(target, root_joint_l_, max_arm_length_l_);
+            solve_ik_single("ee_left", target);
+            broadcast_tf(target, "target_left");
         }
 
-        // 🔥 4. IK 풀기 (양팔 분리하여 상호 간섭 원천 차단) 🔥
-        if (has_right_) solve_ik_single("ee_right", smoothed_target_r_);
-        if (has_left_) solve_ik_single("ee_left", smoothed_target_l_);
-
-        publish_joint_trajectories();
+        publish_trajectories();
     }
 
-    // 🔥 양팔 동시계산 완전 삭제, 수정된 단일 팔 안전 IK 솔버 🔥
-    void solve_ik_single(const std::string& frame, const pinocchio::SE3& target) {
-        auto id = model_.getFrameId(frame); 
+    void solve_ik_single(const std::string& frame_name, const pinocchio::SE3& target) {
+        auto frame_id = model_.getFrameId(frame_name);
         Eigen::VectorXd q = current_q_;
-        
-        for (int i = 0; i < 50; ++i) {
-            pinocchio::forwardKinematics(model_, data_, q); 
+
+        for (int i = 0; i < 10; ++i) { // 반복 횟수 최적화
+            pinocchio::forwardKinematics(model_, data_, q);
             pinocchio::updateFramePlacements(model_, data_);
             
-            Eigen::Matrix<double, 6, 1> err = pinocchio::log6(data_.oMf[id].actInv(target)).toVector();
-            
-            // 에러 클램핑 (급격한 튀어오름 방지용 안전장치 유지)
-            double max_lin_err = 0.05; 
-            double max_ang_err = 0.1;  
-            if (err.head<3>().norm() > max_lin_err) err.head<3>() = err.head<3>().normalized() * max_lin_err;
-            if (err.tail<3>().norm() > max_ang_err) err.tail<3>() = err.tail<3>().normalized() * max_ang_err;
-
+            pinocchio::SE3 dM = data_.oMf[frame_id].actInv(target);
+            Eigen::Matrix<double, 6, 1> err = pinocchio::log6(dM).toVector();
             if (err.norm() < 1e-4) break;
-            
+
             Eigen::Matrix<double, 6, Eigen::Dynamic> J(6, model_.nv); J.setZero();
-            pinocchio::computeFrameJacobian(model_, data_, q, id, pinocchio::LOCAL, J);
-            for (int idx : locked_v_indices_) J.col(idx).setZero();
-            
-            // Damped Pseudo-Inverse
-            Eigen::MatrixXd J_inv = J.transpose() * (J * J.transpose() + Eigen::MatrixXd::Identity(6, 6) * damp_).inverse();
-            Eigen::VectorXd v = J_inv * err;
-            
-            for (int idx : locked_v_indices_) v[idx] = 0.0;
-            
-            // 🔥 업데이트 스텝 오용 수정 (dt_ -> ik_step_) 🔥
-            q = pinocchio::integrate(model_, q, v * ik_step_);
-            
-            // 🔥 잘못된 조인트 클램핑 수정: 1-DOF 관절만 안전하게 클램핑 🔥
+            pinocchio::computeFrameJacobian(model_, data_, q, frame_id, pinocchio::LOCAL, J);
+
+            // Damped Least Squares
+            Eigen::MatrixXd J_inv = J.transpose() * (J * J.transpose() + Eigen::MatrixXd::Identity(6, 6) * 0.01).inverse();
+            q = pinocchio::integrate(model_, q, J_inv * err * 0.5);
+
+            // **조인트 리미트 Clamping (안전 장치)**
             for (int j = 1; j < model_.njoints; ++j) {
-                if (model_.joints[j].nq() == 1) { 
-                    int idx_q = model_.joints[j].idx_q();
-                    q[idx_q] = std::max(model_.lowerPositionLimit[idx_q], std::min(model_.upperPositionLimit[idx_q], q[idx_q]));
+                if (model_.joints[j].nq() == 1) {
+                    int idx = model_.joints[j].idx_q();
+                    q[idx] = std::max(model_.lowerPositionLimit[idx], std::min(model_.upperPositionLimit[idx], q[idx]));
                 }
             }
         }
         current_q_ = q;
     }
 
-    void publish_joint_trajectories() {
-        auto msg_l = trajectory_msgs::msg::JointTrajectory(), msg_r = trajectory_msgs::msg::JointTrajectory();
-        msg_l.header.stamp = msg_r.header.stamp = this->now();
+    void publish_trajectories() {
+        auto msg_l = create_traj_msg(), msg_r = create_traj_msg();
         trajectory_msgs::msg::JointTrajectoryPoint pt_l, pt_r;
-        pt_l.time_from_start.nanosec = pt_r.time_from_start.nanosec = 100000000;
-        
+        pt_l.time_from_start = pt_r.time_from_start = rclcpp::Duration::from_nanoseconds(100000000);
+
         for (int i = 1; i < model_.njoints; ++i) {
+            std::string name = model_.names[i];
             if (model_.joints[i].nq() == 1) {
                 double pos = current_q_[model_.joints[i].idx_q()];
-                if (model_.names[i].find("left_arm") != std::string::npos) { msg_l.joint_names.push_back(model_.names[i]); pt_l.positions.push_back(pos); }
-                else if (model_.names[i].find("right_arm") != std::string::npos) { msg_r.joint_names.push_back(model_.names[i]); pt_r.positions.push_back(pos); }
+                if (name.find("left_arm") != std::string::npos) {
+                    msg_l.joint_names.push_back(name); pt_l.positions.push_back(pos);
+                } else if (name.find("right_arm") != std::string::npos) {
+                    msg_r.joint_names.push_back(name); pt_r.positions.push_back(pos);
+                }
             }
         }
-        msg_l.joint_names.push_back("left_trigger"); pt_l.positions.push_back(left_trigger_val_);
-        msg_r.joint_names.push_back("right_trigger"); pt_r.positions.push_back(right_trigger_val_);
+
+        // 마지막 인덱스에 트리거 추가
+        msg_l.joint_names.push_back("left_trigger"); pt_l.positions.push_back(left_trig_val_);
+        msg_r.joint_names.push_back("right_trigger"); pt_r.positions.push_back(right_trig_val_);
+
         msg_l.points.push_back(pt_l); msg_r.points.push_back(pt_r);
         pub_left_->publish(msg_l); pub_right_->publish(msg_r);
     }
 
-    void broadcast_target_tf(const std::string& p, const std::string& c, const pinocchio::SE3& pose) {
+    // --- 유틸리티 함수들 ---
+    void setup_arm_info(const std::string& ee_frame, int& root_id, double& max_len) {
+        if (!model_.existFrame(ee_frame)) return;
+        auto fid = model_.getFrameId(ee_frame);
+        root_id = model_.frames[fid].parent;
+        max_len = 0.8; // 기본 팔 길이 (계산 로직 간소화 가능)
+    }
+
+    void limit_arm_extension(pinocchio::SE3& target, int root_id, double max_len) {
+        if (root_id < 0) return;
+        Eigen::Vector3d rel = target.translation() - data_.oMi[root_id].translation();
+        if (rel.norm() > max_len) target.translation() = data_.oMi[root_id].translation() + rel.normalized() * max_len;
+    }
+
+    pinocchio::SE3 pose_to_se3(const geometry_msgs::msg::Pose& p) {
+        return pinocchio::SE3(Eigen::Quaterniond(p.orientation.w, p.orientation.x, p.orientation.y, p.orientation.z).toRotationMatrix(), Eigen::Vector3d(p.position.x, p.position.y, p.position.z));
+    }
+
+    pinocchio::SE3 get_offset_se3(const Eigen::Vector3d& xyz, const Eigen::Vector3d& rpy) {
+        double d2r = M_PI / 180.0;
+        Eigen::Matrix3d R = (Eigen::AngleAxisd(rpy.z()*d2r, Eigen::Vector3d::UnitZ()) * Eigen::AngleAxisd(rpy.y()*d2r, Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(rpy.x()*d2r, Eigen::Vector3d::UnitX())).toRotationMatrix();
+        return pinocchio::SE3(R, xyz);
+    }
+
+    void broadcast_tf(const pinocchio::SE3& pose, const std::string& child) {
         geometry_msgs::msg::TransformStamped t;
-        t.header.stamp = this->now(); t.header.frame_id = p; t.child_frame_id = c;
-        t.transform.translation.x = pose.translation()[0]; t.transform.translation.y = pose.translation()[1]; t.transform.translation.z = pose.translation()[2];
+        t.header.stamp = this->now(); t.header.frame_id = "base"; t.child_frame_id = child;
+        t.transform.translation.x = pose.translation().x(); t.transform.translation.y = pose.translation().y(); t.transform.translation.z = pose.translation().z();
         Eigen::Quaterniond q(pose.rotation());
         t.transform.rotation.x = q.x(); t.transform.rotation.y = q.y(); t.transform.rotation.z = q.z(); t.transform.rotation.w = q.w();
         tf_broadcaster_->sendTransform(t);
     }
 
-    std::string urdf_path_;
-    pinocchio::Model model_; pinocchio::Data data_;
-    Eigen::VectorXd current_q_, q_nominal_;
-    std::vector<std::string> joint_names_;
-    std::map<std::string, std::tuple<double, double, int>> joint_limits_;
-    std::vector<int> locked_v_indices_;
-    bool teleop_enabled_ = false, has_left_ = false, has_right_ = false;
-    pinocchio::SE3 left_pose_, right_pose_, smoothed_target_r_, smoothed_target_l_;
-    rclcpp::Time last_print_time_;
+    trajectory_msgs::msg::JointTrajectory create_traj_msg() {
+        trajectory_msgs::msg::JointTrajectory m; m.header.stamp = this->now(); return m;
+    }
 
-    // 🔥 파라미터 튜닝 (발산 방지) 🔥
-    double ik_step_ = 0.5;   // 기존 dt_ 대신 사용하는 IK 수렴 스텝 크기
-    double damp_ = 1e-2;     // 특이점에서 발산을 막기 위한 Damping Factor
+    // 멤버 변수
+    pinocchio::Model model_; pinocchio::Data data_;
+    Eigen::VectorXd current_q_;
+    bool teleop_enabled_ = false, has_left_ = false, has_right_ = false;
+    pinocchio::SE3 left_pose_, right_pose_;
+    double left_trig_val_ = 0.0, right_trig_val_ = 0.0;
+    int root_joint_l_, root_joint_r_; double max_arm_length_l_, max_arm_length_r_;
     
-    double right_trigger_val_ = 0.0, left_trigger_val_ = 0.0;
-    int root_joint_r_ = -1, root_joint_l_ = -1;
-    double max_arm_length_r_ = 0.0, max_arm_length_l_ = 0.0;
+    // 오프셋 (필요 시 수정)
+    Eigen::Vector3d r_off_xyz_{-0.007, 0.003, -0.07}, r_off_rpy_{98.9, 0.3, 163.8};
+    Eigen::Vector3d l_off_xyz_{-0.007, -0.005, -0.07}, l_off_rpy_{-97.5, 1.7, 15.3};
 
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_left_, pub_right_;
-    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_;
-    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr sub_left_, sub_right_;
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr sub_pose_l_, sub_pose_r_;
+    rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr sub_trig_l_, sub_trig_r_;
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr sub_js_;
     rclcpp::TimerBase::SharedPtr ik_timer_;
-    rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr teleop_service_;
+    rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr srv_toggle_;
     std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
-    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_state_pub_;
 };
 
 int main(int argc, char** argv) {

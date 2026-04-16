@@ -4,7 +4,13 @@ FROM osrf/ros:jazzy-desktop-full
 RUN apt-get update && apt-get install -y \
     python3-colcon-common-extensions \
     ros-jazzy-pinocchio \
+    ros-jazzy-rosbridge-suite \
+    python3-tornado \
+    python3-twisted \
+    python3-pymongo \
     python3-rosdep \
+    ros-jazzy-joint-state-publisher-gui \
+    ros-jazzy-xacro \
     # ADB 도구
     android-tools-adb \
     # OpenCV 및 Numpy
@@ -16,6 +22,9 @@ RUN apt-get update && apt-get install -y \
     libcanberra-gtk-module \
     libcanberra-gtk3-module \
     && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y ros-jazzy-rmw-cyclonedds-cpp
+ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
 # rosdep 초기화
 RUN if [ ! -d "/etc/ros/rosdep/sources.list.d" ]; then rosdep init; fi && rosdep update
