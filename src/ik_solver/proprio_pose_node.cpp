@@ -2,8 +2,10 @@
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <std_msgs/msg/float64_multi_array.hpp>
+#include <std_msgs/msg/float64.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 
+#include "rby1_teleop_cpp/joint_state_utils.hpp"
 #include "rby1_teleop_cpp/pose_input_conversion.hpp"
 
 #include <pinocchio/parsers/urdf.hpp>
@@ -45,6 +47,8 @@ public:
         right_pose_6d_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/sensors/proprio/arm_right/pose_6d", 10);
         left_pose_rot_vec_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/sensors/proprio/arm_left/pose_rot_vec", 10);
         right_pose_rot_vec_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/sensors/proprio/arm_right/pose_rot_vec", 10);
+        left_trigger_pub_ = this->create_publisher<std_msgs::msg::Float64>("/sensors/proprio/arm_left/trigger", 10);
+        right_trigger_pub_ = this->create_publisher<std_msgs::msg::Float64>("/sensors/proprio/arm_right/trigger", 10);
 
         joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
             "/joint_states", 10,
@@ -81,6 +85,9 @@ private:
         const pinocchio::SE3 right_pose = oM_head.actInv(data_.oMf[right_ee_frame_id_]) * right_offset_inv_;
 
         publish_arm_poses(left_pose, right_pose);
+        publish_triggers(
+            rby1_teleop_cpp::joint_state::positionOr(*msg, "left_trigger", left_trigger_value_),
+            rby1_teleop_cpp::joint_state::positionOr(*msg, "right_trigger", right_trigger_value_));
     }
 
     void publish_arm_poses(const pinocchio::SE3& left_pose, const pinocchio::SE3& right_pose) {
@@ -92,6 +99,18 @@ private:
         right_pose_rot_vec_pub_->publish(rby1_teleop_cpp::pose_input::toRotationVector(right_pose));
     }
 
+    void publish_triggers(double left_trigger, double right_trigger) {
+        left_trigger_value_ = left_trigger;
+        right_trigger_value_ = right_trigger;
+
+        std_msgs::msg::Float64 left_msg;
+        std_msgs::msg::Float64 right_msg;
+        left_msg.data = left_trigger_value_;
+        right_msg.data = right_trigger_value_;
+        left_trigger_pub_->publish(left_msg);
+        right_trigger_pub_->publish(right_msg);
+    }
+
     pinocchio::Model model_;
     pinocchio::Data data_;
     Eigen::VectorXd current_q_;
@@ -101,6 +120,8 @@ private:
     pinocchio::FrameIndex right_ee_frame_id_;
     pinocchio::SE3 left_offset_inv_;
     pinocchio::SE3 right_offset_inv_;
+    double left_trigger_value_ = 0.0;
+    double right_trigger_value_ = 0.0;
 
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr left_pose_pub_;
@@ -109,6 +130,8 @@ private:
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr right_pose_6d_pub_;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr left_pose_rot_vec_pub_;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr right_pose_rot_vec_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr left_trigger_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr right_trigger_pub_;
 };
 
 int main(int argc, char** argv) {

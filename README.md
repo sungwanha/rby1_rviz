@@ -41,6 +41,12 @@ pose 입력 토픽은 `teleop_ik_node`의 `pose_input_mode` 파라미터로 하�
 | `six_d` | `/control/body/arm_left_controller/pose_6d` | `/control/body/arm_right_controller/pose_6d` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:9] = [r11, r12, r13, r21, r22, r23]` |
 | `rot_vec` | `/control/body/arm_left_controller/pose_rot_vec` | `/control/body/arm_right_controller/pose_rot_vec` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:6] = [rx, ry, rz]` |
 
+trigger 입력은 pose mode와 무관하게 별도 토픽을 사용합니다. `/joint_states`에 `left_trigger`, `right_trigger` position이 들어오면 그 값도 계속 반영합니다.
+
+| Left Topic | Right Topic | Type | Data |
+| --- | --- | --- | --- |
+| `/control/body/arm_left_controller/trigger` | `/control/body/arm_right_controller/trigger` | `std_msgs/msg/Float64` | 각 arm trajectory 끝에 `left_trigger`, `right_trigger` joint로 추가 |
+
 출력:
 
 | Topic | Type | 설명 |
@@ -62,6 +68,8 @@ pose 입력 토픽은 `teleop_ik_node`의 `pose_input_mode` 파라미터로 하�
 | `/sensors/proprio/arm_right/pose_6d` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:9] = [r11, r12, r13, r21, r22, r23]` |
 | `/sensors/proprio/arm_left/pose_rot_vec` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:6] = [rx, ry, rz]` |
 | `/sensors/proprio/arm_right/pose_rot_vec` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:6] = [rx, ry, rz]` |
+| `/sensors/proprio/arm_left/trigger` | `std_msgs/msg/Float64` | `/joint_states`의 `left_trigger` position |
+| `/sensors/proprio/arm_right/trigger` | `std_msgs/msg/Float64` | `/joint_states`의 `right_trigger` position |
 
 ## 사용 방법
 

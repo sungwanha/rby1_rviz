@@ -4,10 +4,12 @@
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <tf2_ros/transform_broadcaster.h>
 #include <std_srvs/srv/set_bool.hpp>
+#include <std_msgs/msg/float64.hpp>
 #include <std_msgs/msg/float64_multi_array.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 
+#include "rby1_teleop_cpp/joint_state_utils.hpp"
 #include "rby1_teleop_cpp/pose_input_conversion.hpp"
 
 #include <pinocchio/parsers/urdf.hpp>
@@ -123,6 +125,16 @@ public:
 
         joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
             "/joint_states", 10, std::bind(&TeleopIKNode::joint_state_callback, this, std::placeholders::_1));
+        sub_left_trigger_ = this->create_subscription<std_msgs::msg::Float64>(
+            "/control/body/arm_left_controller/trigger", 10,
+            [this](const std_msgs::msg::Float64::SharedPtr msg) {
+                left_trigger_val_ = msg->data;
+            });
+        sub_right_trigger_ = this->create_subscription<std_msgs::msg::Float64>(
+            "/control/body/arm_right_controller/trigger", 10,
+            [this](const std_msgs::msg::Float64::SharedPtr msg) {
+                right_trigger_val_ = msg->data;
+            });
         teleop_service_ = this->create_service<std_srvs::srv::SetBool>(
             "toggle_teleop", std::bind(&TeleopIKNode::teleop_toggle_callback, this, std::placeholders::_1, std::placeholders::_2));
         configure_pose_input_subscriptions();
@@ -150,11 +162,12 @@ private:
     }
 
     void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg) {
+        left_trigger_val_ = rby1_teleop_cpp::joint_state::positionOr(*msg, "left_trigger", left_trigger_val_);
+        right_trigger_val_ = rby1_teleop_cpp::joint_state::positionOr(*msg, "right_trigger", right_trigger_val_);
+
         if (teleop_enabled_) return; 
-        for (size_t i = 0; i < msg->name.size(); ++i) {
+        for (size_t i = 0; i < msg->name.size() && i < msg->position.size(); ++i) {
             if (joint_limits_.count(msg->name[i])) current_q_[std::get<2>(joint_limits_[msg->name[i]])] = msg->position[i];
-            else if (msg->name[i] == "left_trigger") left_trigger_val_ = msg->position[i];
-            else if (msg->name[i] == "right_trigger") right_trigger_val_ = msg->position[i];
         }
     }
 
@@ -463,6 +476,7 @@ private:
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_;
     rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr sub_left_pose_, sub_right_pose_;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr sub_left_array_, sub_right_array_;
+    rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr sub_left_trigger_, sub_right_trigger_;
     rclcpp::TimerBase::SharedPtr ik_timer_;
     rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr teleop_service_;
     std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;

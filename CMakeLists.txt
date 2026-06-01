@@ -109,6 +109,14 @@ if(BUILD_TESTING)
     ${pinocchio_LIBRARIES}
   )
 
+  ament_add_gtest(test_joint_state_utils test/test_joint_state_utils.cpp)
+  target_include_directories(test_joint_state_utils PRIVATE
+    include
+  )
+  ament_target_dependencies(test_joint_state_utils
+    sensor_msgs
+  )
+
   add_test(
     NAME test_ee_parquet_pose_player
     COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/test/test_ee_parquet_pose_player.py
