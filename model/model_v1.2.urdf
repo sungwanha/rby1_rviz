@@ -728,7 +728,7 @@
             acceleration="10.0"
             velocity="3.141592654"
             lower="-3.141592654"
-            upper="3.141592654"
+            upper="1.570796327"
         />
     </joint>
 
@@ -742,8 +742,8 @@
         <limit effort="70.0"
             acceleration="10.0"
             velocity="3.141592654"
-            lower="-3.141592654"
-            upper="0.017453293"
+            lower="-1.570796327"
+            upper="0.0"
         />
     </joint>
 
@@ -773,7 +773,7 @@
             acceleration="10.0"
             velocity="3.141592654"
             lower="-2.617993878"
-            upper="0.017453293"
+            upper="0.1"
         />
     </joint>
 
@@ -833,7 +833,7 @@
             acceleration="10.0"
             velocity="3.141592654"
             lower="-3.141592654"
-            upper="3.141592654"
+            upper="1.570796327"
         />
     </joint>
 
@@ -847,8 +847,8 @@
         <limit effort="70.0"
             acceleration="10.0"
             velocity="3.141592654"
-            lower="-0.017453293"
-            upper="3.141592654"
+            lower="0.0"
+            upper="1.570796327"
         />
     </joint>
 
@@ -878,7 +878,7 @@
             acceleration="10.0"
             velocity="3.141592654"
             lower="-2.617993878"
-            upper="0.017453293"
+            upper="0.1"
         />
     </joint>
 

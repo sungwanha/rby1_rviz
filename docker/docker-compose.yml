@@ -1,0 +1,54 @@
+name: rby1_rviz
+
+services:
+  rby1_rviz_dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: dev
+    container_name: rby1_rviz_dev_container
+    network_mode: host
+    init: true
+    stdin_open: true
+    tty: true
+    privileged: true
+    environment:
+      - ROS_DOMAIN_ID=52
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - XAUTHORITY=/root/.Xauthority
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - COLCON_BUILD_ON_START=1
+    volumes:
+      - ..:/app
+      - /dev:/dev
+      # [추가] 호스트의 build/install 폴더가 컨테이너를 덮어쓰지 못하게 격리
+      - /app/build
+      - /app/install
+      - /app/log
+      # GUI 권한용
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XAUTHORITY:-${HOME}/.Xauthority}:/root/.Xauthority:ro
+
+  rby1_rviz_prod:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: prod
+    container_name: rby1_rviz_prod_container
+    network_mode: host
+    init: true
+    stdin_open: true
+    tty: true
+    privileged: true
+    environment:
+      - ROS_DOMAIN_ID=52
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - XAUTHORITY=/root/.Xauthority
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - COLCON_BUILD_ON_START=0
+    volumes:
+      - /dev:/dev
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XAUTHORITY:-${HOME}/.Xauthority}:/root/.Xauthority:ro

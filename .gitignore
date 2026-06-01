@@ -1,3 +1,28 @@
-build/
-install/
-log/
+# ROS/colcon build outputs
+/build/
+/install/
+/log/
+
+# Local datasets / generated metadata
+/data/
+/meta/
+
+# Codex/Superpowers local planning artifacts
+/.codex
+/docs/superpowers/
+
+# Runtime logs
+*.log
+.pytest_cache/
+.coverage
+coverage.xml
+
+# Saved teaching points are runtime/user data.
+# Keep the directory itself through point/.gitkeep.
+/point/*
+!/point/.gitkeep
+
+# Python cache
+__pycache__/
+**/__pycache__/
+*.py[cod]

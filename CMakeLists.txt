@@ -23,12 +23,17 @@ find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(pinocchio REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(trajectory_msgs REQUIRED)
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+endif()
 
 # Executable
-add_executable(teleop_ik_node teleop_ik.cpp)
+add_executable(teleop_ik_node src/ik_solver/teleop_ik.cpp)
+add_executable(proprio_pose_node src/ik_solver/proprio_pose_node.cpp)
 
 # Use ament_target_dependencies for ROS packages
 ament_target_dependencies(teleop_ik_node
@@ -37,11 +42,19 @@ ament_target_dependencies(teleop_ik_node
   std_msgs
   std_srvs
   tf2_ros
+  geometry_msgs
   trajectory_msgs
+)
+ament_target_dependencies(proprio_pose_node
+  rclcpp
+  sensor_msgs
+  std_msgs
+  geometry_msgs
 )
 
 # Link non-ament dependencies
 target_include_directories(teleop_ik_node PRIVATE 
+  include
   ${EIGEN3_INCLUDE_DIR}
   ${pinocchio_INCLUDE_DIRS}
 )
@@ -49,13 +62,57 @@ target_link_libraries(teleop_ik_node
   ${pinocchio_LIBRARIES}
   ament_index_cpp::ament_index_cpp
 )
+target_include_directories(proprio_pose_node PRIVATE
+  include
+  ${EIGEN3_INCLUDE_DIR}
+  ${pinocchio_INCLUDE_DIRS}
+)
+target_link_libraries(proprio_pose_node
+  ${pinocchio_LIBRARIES}
+  ament_index_cpp::ament_index_cpp
+)
 
 install(TARGETS
   teleop_ik_node
+  proprio_pose_node
   DESTINATION lib/${PROJECT_NAME}
+)
+install(PROGRAMS
+  src/for_test/sim_pose_publisher.py
+  src/for_test/ee_parquet_pose_player.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(DIRECTORY include/
+  DESTINATION include
 )
 install(DIRECTORY model
   DESTINATION share/${PROJECT_NAME}
 )
+install(FILES
+  display.launch.py
+  rby1.rviz
+  DESTINATION share/${PROJECT_NAME}
+)
+
+if(BUILD_TESTING)
+  ament_add_gtest(test_pose_input_conversion test/test_pose_input_conversion.cpp)
+  target_include_directories(test_pose_input_conversion PRIVATE
+    include
+    ${EIGEN3_INCLUDE_DIR}
+    ${pinocchio_INCLUDE_DIRS}
+  )
+  ament_target_dependencies(test_pose_input_conversion
+    geometry_msgs
+    std_msgs
+  )
+  target_link_libraries(test_pose_input_conversion
+    ${pinocchio_LIBRARIES}
+  )
+
+  add_test(
+    NAME test_ee_parquet_pose_player
+    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/test/test_ee_parquet_pose_player.py
+  )
+endif()
 
 ament_package()

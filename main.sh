@@ -1,76 +1,146 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# --- 설정 구간 ---
-# docker ps에서 확인된 정확한 이름을 입력하세요.
-CONTAINER_NAME="rby1_rviz_container"
+COMPOSE_FILE="docker/docker-compose.yml"
 GREEN='\033[1;32m'
 RED='\033[1;31m'
+YELLOW='\033[1;33m'
 NC='\033[0m'
 
-while true; do
-    clear 
+MODE=""
+SERVICE=""
+CONTAINER_NAME=""
 
-    # 정확한 이름 매칭을 위해 정규표현식(^, $) 사용
-    if [ "$(docker ps -q -f name=^/${CONTAINER_NAME}$)" ]; then
-        STATUS="${GREEN}🟢 (현재 켜짐)${NC}"
+set_mode() {
+    local selected="$1"
+
+    case "$selected" in
+        dev)
+            MODE="dev"
+            SERVICE="rby1_rviz_dev"
+            CONTAINER_NAME="rby1_rviz_dev_container"
+            ;;
+        prod)
+            MODE="prod"
+            SERVICE="rby1_rviz_prod"
+            CONTAINER_NAME="rby1_rviz_prod_container"
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+select_mode() {
+    while true; do
+        clear
+        echo "====================================="
+        echo " RBY1 RViz Docker Mode"
+        echo "====================================="
+        echo "1. dev  - host source bind mount, runtime colcon build"
+        echo "2. prod - build-time colcon build, source removed from image"
+        echo "3. exit"
+        echo "====================================="
+        read -r -p "실행 모드를 선택하세요: " mode_choice
+
+        case "$mode_choice" in
+            1|dev)
+                set_mode dev
+                return 0
+                ;;
+            2|prod)
+                set_mode prod
+                return 0
+                ;;
+            3|exit|quit)
+                exit 0
+                ;;
+            *)
+                echo "잘못된 입력입니다."
+                sleep 1
+                ;;
+        esac
+    done
+}
+
+is_running() {
+    [ -n "$(docker ps -q -f name=^/${CONTAINER_NAME}$)" ]
+}
+
+grant_xhost() {
+    xhost +local:root > /dev/null 2>&1 || true
+}
+
+open_shell() {
+    docker exec -it "$CONTAINER_NAME" bash -lc \
+        "source /opt/ros/jazzy/setup.bash && source /app/install/setup.bash 2>/dev/null || true; cd /app; exec bash"
+}
+
+select_mode
+
+while true; do
+    clear
+
+    if is_running; then
+        STATUS="${GREEN}ON${NC}"
     else
-        STATUS="${RED}🔴 (현재 꺼짐)${NC}"
+        STATUS="${RED}OFF${NC}"
     fi
 
     echo "====================================="
-    echo " 🐳 UDD Project 도커 관리 매니저 🐳 "
+    echo " RBY1 RViz Docker Manager"
     echo "====================================="
-    echo "1. 도커 환경 켜기 (Build & Start)"
-    echo -e "2. 도커 터미널 접속 ${STATUS}"
-    echo "3. 도커 환경 끄기 (Stop & Remove)"
-    echo "4. 종료"
+    echo -e "mode: ${YELLOW}${MODE}${NC}"
+    echo -e "container: ${CONTAINER_NAME} (${STATUS})"
     echo "====================================="
-    read -p "원하는 작업의 번호를 입력하세요: " choice
+    echo "1. Start selected mode (build & up)"
+    echo "2. Open container shell"
+    echo "3. Stop selected mode"
+    echo "4. Switch mode"
+    echo "5. Stop all modes"
+    echo "6. Exit"
+    echo "====================================="
+    read -r -p "원하는 작업의 번호를 입력하세요: " choice
 
-    case $choice in
+    case "$choice" in
         1)
-            echo "🚀 빌드 파일 정리 및 컨테이너 시작..."
-            # [중요] 호스트(Humble)와 컨테이너(Jazzy)의 경로 충돌 방지를 위해 기존 빌드 폴더 삭제
-            rm -rf build/ install/ log/
-            
-            # GUI 권한 부여
-            xhost +local:root > /dev/null 2>&1
-            
-            # 빌드 및 백그라운드 실행
-            docker compose up -d --build
+            echo "Starting ${MODE} container..."
+            grant_xhost
+            docker compose -f "$COMPOSE_FILE" up -d --build "$SERVICE"
             echo ""
-            echo "✅ 컨테이너가 성공적으로 켜졌습니다!"
+            echo "${MODE} container is running."
             sleep 2
             ;;
         2)
-            if [ "$(docker ps -q -f name=^/${CONTAINER_NAME}$)" ]; then
-                echo "💻 도커 내부로 접속합니다..."
-                xhost +local:root > /dev/null 2>&1
-                # 접속 시 자동으로 ROS 2 환경을 로드하도록 설정
-                docker exec -it $CONTAINER_NAME bash -c "source /opt/ros/jazzy/setup.bash && source /app/install/setup.bash 2>/dev/null || true; bash"
+            if is_running; then
+                grant_xhost
+                open_shell
             else
-                echo -e "${RED}⚠️ 오류: 컨테이너가 아직 꺼져있습니다! 1번을 먼저 눌러주세요.${NC}"
+                echo "Container is not running. Start it first."
                 sleep 2
             fi
             ;;
         3)
-            echo "🛑 도커 컨테이너를 중지합니다..."
-            # [해결책] compose down이 실패할 경우를 대비해 이름으로 직접 중지 및 삭제
-            docker stop $CONTAINER_NAME > /dev/null 2>&1
-            docker rm -f $CONTAINER_NAME > /dev/null 2>&1
-            
-            # 혹시 모를 네트워크/볼륨 정리를 위해 down도 병행
-            docker compose down > /dev/null 2>&1
-            
-            echo "✅ 완전히 종료되었습니다!"
+            echo "Stopping ${MODE} container..."
+            docker compose -f "$COMPOSE_FILE" stop "$SERVICE" > /dev/null 2>&1 || true
+            docker compose -f "$COMPOSE_FILE" rm -f "$SERVICE" > /dev/null 2>&1 || true
+            echo "Stopped ${MODE} container."
             sleep 2
             ;;
         4)
-            echo "👋 매니저를 종료합니다."
+            select_mode
+            ;;
+        5)
+            echo "Stopping all containers from this compose project..."
+            docker compose -f "$COMPOSE_FILE" down
+            echo "Stopped all modes."
+            sleep 2
+            ;;
+        6)
+            echo "Exiting."
             break
             ;;
         *)
-            echo "❌ 잘못된 입력입니다. 1~4 사이의 숫자가 아닙니다."
+            echo "잘못된 입력입니다."
             sleep 2
             ;;
     esac
