@@ -20,12 +20,16 @@ RUN apt-get update && apt-get install -y \
     # OpenCV 및 Numpy
     python3-opencv \
     python3-numpy \
+    python3-pandas \
+    python3-pip \
     # GUI 실행을 위한 최신 라이브러리 (Noble 버전 대응)
     libgl1 \
     libglx0 \
     libcanberra-gtk-module \
     libcanberra-gtk3-module \
     && rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m pip install --no-cache-dir --break-system-packages --only-binary=:all: pyarrow
 
 RUN apt-get update && apt-get install -y \
     ros-jazzy-rmw-cyclonedds-cpp \

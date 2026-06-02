@@ -58,6 +58,11 @@ def generate_launch_description():
             description='Publish ZED-frame arm proprioception poses from /joint_states'
         ),
         DeclareLaunchArgument(
+            'use_rviz',
+            default_value='false',
+            description='Start RViz with rby1.rviz'
+        ),
+        DeclareLaunchArgument(
             'use_rosbridge',
             default_value='false',
             description='Start rosbridge websocket server on port 9091'
@@ -80,6 +85,7 @@ def generate_launch_description():
             executable='rviz2',
             name='rviz2',
             output='screen',
+            condition=IfCondition(LaunchConfiguration('use_rviz')),
             arguments=['-d', rviz_config_path]
         ),
         Node(

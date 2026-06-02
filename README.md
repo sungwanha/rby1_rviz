@@ -15,12 +15,12 @@ ros2 launch rby1_teleop_cpp display.launch.py
 | Node | Package / Executable | 역할 |
 | --- | --- | --- |
 | `robot_state_publisher` | `robot_state_publisher/robot_state_publisher` | `model/model_v1.2.urdf`를 `/robot_description`으로 게시 |
-| `rviz2` | `rviz2/rviz2` | `rby1.rviz` 설정으로 RViz 실행 |
+| `rviz2` | `rviz2/rviz2` | `use_rviz:=true`일 때만 `rby1.rviz` 설정으로 RViz 실행 |
 | `teleop_ik_node` | `rby1_teleop_cpp/teleop_ik_node` | 선택된 pose 입력 모드를 받아 양팔 IK를 계산하고 joint trajectory 게시 |
 | `proprio_pose_node` | `rby1_teleop_cpp/proprio_pose_node` | `/joint_states`에서 ZED 기준 좌/우 팔 pose 관측값 게시 |
 | `rosbridge_server` | `rosbridge_server/rosbridge_websocket` | `use_rosbridge:=true`일 때만 WebSocket bridge 실행, port `9091` |
 
-`robot_state_publisher`는 URDF와 `/joint_states`를 받아 각 링크의 TF를 만드는 노드입니다. RViz의 RobotModel은 `/robot_description`과 TF를 기준으로 로봇을 표시하므로 RViz 확인에는 이 노드가 필요합니다.
+`robot_state_publisher`는 URDF와 `/joint_states`를 받아 각 링크의 TF를 만드는 노드입니다. RViz의 RobotModel은 `/robot_description`과 TF를 기준으로 로봇을 표시하므로 RViz 확인에는 이 노드가 필요합니다. 실제 텔레옵에서는 RViz를 쓰지 않는 경우가 많아 `use_rviz` 기본값은 `false`입니다.
 
 ## 텔레옵 흐름
 
@@ -32,6 +32,7 @@ ros2 launch rby1_teleop_cpp display.launch.py
 | --- | --- | --- |
 | `/joint_states` | `sensor_msgs/msg/JointState` | 텔레옵 비활성 상태에서 현재 로봇 자세 초기화 |
 | `/toggle_teleop` | `std_srvs/srv/SetBool` | 텔레옵 활성/비활성 전환 |
+| `/update_nullspace_posture` | `std_srvs/srv/Trigger` | 마지막으로 수신한 `/joint_states`를 null-space 기준 자세로 저장 |
 
 pose 입력 토픽은 `teleop_ik_node`의 `pose_input_mode` 파라미터로 하나만 선택합니다. 기존 `/simdd/pose_left`, `/simdd/pose_right` 토픽은 사용하지 않습니다.
 
@@ -47,14 +48,21 @@ trigger 입력은 pose mode와 무관하게 별도 토픽을 사용합니다. `/
 | --- | --- | --- | --- |
 | `/control/body/arm_left_controller/trigger` | `/control/body/arm_right_controller/trigger` | `std_msgs/msg/Float64` | 각 arm trajectory 끝에 `left_trigger`, `right_trigger` joint로 추가 |
 
+null-space posture 기준 자세는 런타임에 갱신할 수 있습니다. 이 서비스는 별도 인자를 받지 않고, `teleop_ik_node`가 마지막으로 받은 `/joint_states`의 model joint position을 `q_nominal_`로 저장합니다.
+
+```bash
+ros2 service call /update_nullspace_posture std_srvs/srv/Trigger {}
+```
+
 출력:
 
 | Topic | Type | 설명 |
 | --- | --- | --- |
 | `/leader/master_arm_joint_left/joint_trajectory` | `trajectory_msgs/msg/JointTrajectory` | 왼팔 실제 로봇 제어 명령 |
 | `/leader/master_arm_joint_right/joint_trajectory` | `trajectory_msgs/msg/JointTrajectory` | 오른팔 실제 로봇 제어 명령 |
-| `/joint_states` | `sensor_msgs/msg/JointState` | RViz 표시용 현재 IK 상태 |
 | `/tf` | `tf2_msgs/msg/TFMessage` | `target_left`, `target_right` 시각화 TF |
+
+`teleop_ik_node`는 `/joint_states`를 publish하지 않습니다. RViz RobotModel 표시와 null-space posture 갱신은 로봇 또는 별도 시뮬레이션 노드가 publish하는 `/joint_states`를 기준으로 합니다.
 
 관측 pose 출력:
 
@@ -86,6 +94,12 @@ source install/setup.bash
 ros2 launch rby1_teleop_cpp display.launch.py
 ```
 
+RViz는 기본으로 실행하지 않습니다. 시각 확인이 필요할 때만 켭니다.
+
+```bash
+ros2 launch rby1_teleop_cpp display.launch.py use_rviz:=true
+```
+
 `proprio_pose_node`는 기본으로 같이 실행됩니다. 필요 없으면 끌 수 있습니다.
 
 ```bash
@@ -110,21 +124,32 @@ ros2 launch rby1_teleop_cpp display.launch.py use_rosbridge:=true
 
 ## 실제 로봇 사용
 
-실제 로봇에서 사용할 때는 데이터 리플레이나 임의 pose 테스트를 켜지 않습니다. 실제 로봇 제어기와 같은 `ROS_DOMAIN_ID`를 사용하고, 로봇의 `/joint_states`가 들어오는지 먼저 확인합니다.
+실제 로봇에서 사용할 때는 데이터 리플레이나 임의 pose 테스트를 켜지 않습니다. 실제 로봇 제어기와 같은 `ROS_DOMAIN_ID`를 사용합니다.
+
+### 실제 로봇 사용 플로우
+
+1. ROS domain을 로봇과 맞춥니다.
 
 ```bash
 export ROS_DOMAIN_ID=<robot_domain_id>
 source install/setup.bash
-ros2 topic echo /joint_states --once
 ```
 
-텔레옵 노드와 관측 pose 노드를 실행합니다. 외부 추론/제어 노드가 quaternion pose를 보낸다면 기본 모드 그대로 실행합니다.
+2. 로봇 상태와 controller 토픽이 보이는지 확인합니다.
+
+```bash
+ros2 topic echo /joint_states --once
+ros2 topic info /leader/master_arm_joint_left/joint_trajectory
+ros2 topic info /leader/master_arm_joint_right/joint_trajectory
+```
+
+3. 모델/정책 출력 형식에 맞춰 런치를 실행합니다. 실제 텔레옵 기본 실행은 RViz 없이 실행됩니다.
 
 ```bash
 ros2 launch rby1_teleop_cpp display.launch.py pose_input_mode:=quaternion
 ```
 
-외부 추론/제어 노드가 6D 또는 rotation vector를 보낸다면 모드를 맞춥니다.
+6D 또는 rotation vector를 쓰는 모델이면 모드를 맞춥니다.
 
 ```bash
 ros2 launch rby1_teleop_cpp display.launch.py pose_input_mode:=six_d
@@ -134,7 +159,13 @@ ros2 launch rby1_teleop_cpp display.launch.py pose_input_mode:=six_d
 ros2 launch rby1_teleop_cpp display.launch.py pose_input_mode:=rot_vec
 ```
 
-실제 로봇에 명령을 내리기 전 입력 토픽이 들어오는지 확인합니다.
+RViz 확인이 필요하면 명시적으로 켭니다.
+
+```bash
+ros2 launch rby1_teleop_cpp display.launch.py pose_input_mode:=quaternion use_rviz:=true
+```
+
+4. 모델/정책 pose 입력이 들어오는지 확인합니다.
 
 ```bash
 ros2 topic echo /control/body/arm_left_controller/pose --once
@@ -143,20 +174,26 @@ ros2 topic echo /control/body/arm_right_controller/pose --once
 
 `pose_input_mode:=six_d`일 때는 `/pose_6d`, `pose_input_mode:=rot_vec`일 때는 `/pose_rot_vec` 토픽을 확인합니다.
 
-관측 pose 출력은 다음 토픽에서 확인합니다.
+5. 관측 pose 출력이 필요한 경우 확인합니다.
 
 ```bash
 ros2 topic echo /sensors/proprio/arm_left/pose --once
 ros2 topic echo /sensors/proprio/arm_right/pose --once
 ```
 
-입력 pose와 현재 자세가 정상임을 확인한 뒤 텔레옵을 켭니다.
+6. 현재 로봇 자세를 null-space 기준 자세로 저장합니다.
+
+```bash
+ros2 service call /update_nullspace_posture std_srvs/srv/Trigger {}
+```
+
+7. 입력 pose와 현재 자세가 정상임을 확인한 뒤 텔레옵을 켭니다.
 
 ```bash
 ros2 service call /toggle_teleop std_srvs/srv/SetBool "{data: true}"
 ```
 
-중지:
+8. 텔레옵을 중지합니다.
 
 ```bash
 ros2 service call /toggle_teleop std_srvs/srv/SetBool "{data: false}"

@@ -4,6 +4,7 @@
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <tf2_ros/transform_broadcaster.h>
 #include <std_srvs/srv/set_bool.hpp>
+#include <std_srvs/srv/trigger.hpp>
 #include <std_msgs/msg/float64.hpp>
 #include <std_msgs/msg/float64_multi_array.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
@@ -137,9 +138,10 @@ public:
             });
         teleop_service_ = this->create_service<std_srvs::srv::SetBool>(
             "toggle_teleop", std::bind(&TeleopIKNode::teleop_toggle_callback, this, std::placeholders::_1, std::placeholders::_2));
+        nullspace_posture_service_ = this->create_service<std_srvs::srv::Trigger>(
+            "update_nullspace_posture",
+            std::bind(&TeleopIKNode::update_nullspace_posture_callback, this, std::placeholders::_1, std::placeholders::_2));
         configure_pose_input_subscriptions();
-
-        joint_state_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("/joint_states", 10);
 
         ik_timer_ = this->create_wall_timer(20ms, std::bind(&TeleopIKNode::update_ik, this));
     }
@@ -161,7 +163,42 @@ private:
         res->message = teleop_enabled_ ? "Enabled" : "Disabled";
     }
 
+    void update_nullspace_posture_callback(
+        const std::shared_ptr<std_srvs::srv::Trigger::Request>,
+        std::shared_ptr<std_srvs::srv::Trigger::Response> res) {
+        if (!has_latest_joint_state_) {
+            res->success = false;
+            res->message = "Cannot update null-space posture: no /joint_states message received yet";
+            return;
+        }
+
+        Eigen::VectorXd updated_nominal = q_nominal_;
+        int updated_count = 0;
+        for (size_t i = 0; i < latest_joint_state_.name.size() && i < latest_joint_state_.position.size(); ++i) {
+            const auto it = joint_limits_.find(latest_joint_state_.name[i]);
+            if (it == joint_limits_.end()) {
+                continue;
+            }
+            updated_nominal[std::get<2>(it->second)] = latest_joint_state_.position[i];
+            ++updated_count;
+        }
+
+        if (updated_count == 0) {
+            res->success = false;
+            res->message = "Cannot update null-space posture: /joint_states did not contain model joints";
+            return;
+        }
+
+        q_nominal_ = updated_nominal;
+        res->success = true;
+        res->message = "Updated null-space posture from /joint_states with " + std::to_string(updated_count) + " joints";
+        RCLCPP_INFO(this->get_logger(), "%s", res->message.c_str());
+    }
+
     void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg) {
+        latest_joint_state_ = *msg;
+        has_latest_joint_state_ = true;
+
         left_trigger_val_ = rby1_teleop_cpp::joint_state::positionOr(*msg, "left_trigger", left_trigger_val_);
         right_trigger_val_ = rby1_teleop_cpp::joint_state::positionOr(*msg, "right_trigger", right_trigger_val_);
 
@@ -255,18 +292,7 @@ private:
     }
 
     void update_ik() {
-        // 1. RViz 시각화를 위한 현재 상태 퍼블리시
-        sensor_msgs::msg::JointState js_msg;
-        js_msg.header.stamp = this->now();
-        for (const auto& pair : joint_limits_) {
-            js_msg.name.push_back(pair.first);
-            js_msg.position.push_back(current_q_[std::get<2>(pair.second)]);
-        }
-        js_msg.name.push_back("left_trigger"); js_msg.position.push_back(left_trigger_val_);
-        js_msg.name.push_back("right_trigger"); js_msg.position.push_back(right_trigger_val_);
-        joint_state_pub_->publish(js_msg);
-
-        // 2. 텔레옵 비활성화 시 리턴
+        // 텔레옵 비활성화 시 리턴
         if (!teleop_enabled_ || (!has_right_ && !has_left_)) return;
 
         pinocchio::forwardKinematics(model_, data_, current_q_);
@@ -460,7 +486,8 @@ private:
     std::vector<std::string> joint_names_;
     std::map<std::string, std::tuple<double, double, int>> joint_limits_;
     std::vector<int> locked_v_indices_;
-    bool teleop_enabled_ = false, has_left_ = false, has_right_ = false;
+    bool teleop_enabled_ = false, has_left_ = false, has_right_ = false, has_latest_joint_state_ = false;
+    sensor_msgs::msg::JointState latest_joint_state_;
     pinocchio::SE3 left_pose_, right_pose_, smoothed_target_r_, smoothed_target_l_;
     rclcpp::Time last_print_time_;
 
@@ -479,8 +506,8 @@ private:
     rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr sub_left_trigger_, sub_right_trigger_;
     rclcpp::TimerBase::SharedPtr ik_timer_;
     rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr teleop_service_;
+    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr nullspace_posture_service_;
     std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
-    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_state_pub_;
 };
 
 int main(int argc, char** argv) {
