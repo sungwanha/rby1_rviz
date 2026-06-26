@@ -121,6 +121,11 @@ if(BUILD_TESTING)
     NAME test_ee_parquet_pose_player
     COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/test/test_ee_parquet_pose_player.py
   )
+
+  add_test(
+    NAME test_active_topic_contract
+    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/test/test_active_topic_contract.py
+  )
 endif()
 
 ament_package()

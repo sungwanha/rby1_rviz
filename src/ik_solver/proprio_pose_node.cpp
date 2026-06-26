@@ -51,7 +51,7 @@ public:
         right_trigger_pub_ = this->create_publisher<std_msgs::msg::Float64>("/sensors/proprio/arm_right/trigger", 10);
 
         joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
-            "/joint_states", 10,
+            "/sensors/proprio/body/joint_states", 10,
             std::bind(&ProprioPoseNode::joint_state_callback, this, std::placeholders::_1));
 
         RCLCPP_INFO(this->get_logger(), "Proprio pose node started with URDF: %s", urdf_path.c_str());

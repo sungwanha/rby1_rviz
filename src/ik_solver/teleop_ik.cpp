@@ -121,11 +121,11 @@ public:
         calc_arm_params("ee_left", root_joint_l_, max_arm_length_l_);
 
         tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
-        pub_left_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/leader/master_arm_joint_left/joint_trajectory", 10);
-        pub_right_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/leader/master_arm_joint_right/joint_trajectory", 10);
+        pub_left_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/control/body/arm_left_controller/joint_trajectory", 10);
+        pub_right_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/control/body/arm_right_controller/joint_trajectory", 10);
 
         joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
-            "/joint_states", 10, std::bind(&TeleopIKNode::joint_state_callback, this, std::placeholders::_1));
+            "/sensors/proprio/body/joint_states", 10, std::bind(&TeleopIKNode::joint_state_callback, this, std::placeholders::_1));
         sub_left_trigger_ = this->create_subscription<std_msgs::msg::Float64>(
             "/control/body/arm_left_controller/trigger", 10,
             [this](const std_msgs::msg::Float64::SharedPtr msg) {
@@ -168,7 +168,7 @@ private:
         std::shared_ptr<std_srvs::srv::Trigger::Response> res) {
         if (!has_latest_joint_state_) {
             res->success = false;
-            res->message = "Cannot update null-space posture: no /joint_states message received yet";
+            res->message = "Cannot update null-space posture: no /sensors/proprio/body/joint_states message received yet";
             return;
         }
 
@@ -185,13 +185,13 @@ private:
 
         if (updated_count == 0) {
             res->success = false;
-            res->message = "Cannot update null-space posture: /joint_states did not contain model joints";
+            res->message = "Cannot update null-space posture: /sensors/proprio/body/joint_states did not contain model joints";
             return;
         }
 
         q_nominal_ = updated_nominal;
         res->success = true;
-        res->message = "Updated null-space posture from /joint_states with " + std::to_string(updated_count) + " joints";
+        res->message = "Updated null-space posture from /sensors/proprio/body/joint_states with " + std::to_string(updated_count) + " joints";
         RCLCPP_INFO(this->get_logger(), "%s", res->message.c_str());
     }
 
@@ -455,7 +455,8 @@ private:
         auto msg_l = trajectory_msgs::msg::JointTrajectory(), msg_r = trajectory_msgs::msg::JointTrajectory();
         msg_l.header.stamp = msg_r.header.stamp = this->now();
         trajectory_msgs::msg::JointTrajectoryPoint pt_l, pt_r;
-        pt_l.time_from_start.nanosec = pt_r.time_from_start.nanosec = 100000000;
+        pt_l.time_from_start.sec = pt_r.time_from_start.sec = 0;
+        pt_l.time_from_start.nanosec = pt_r.time_from_start.nanosec = 20000000;
         
         for (int i = 1; i < model_.njoints; ++i) {
             if (model_.joints[i].nq() == 1) {

@@ -55,7 +55,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'publish_proprio_poses',
             default_value='true',
-            description='Publish ZED-frame arm proprioception poses from /joint_states'
+            description='Publish ZED-frame arm proprioception poses from /sensors/proprio/body/joint_states'
         ),
         DeclareLaunchArgument(
             'use_rviz',
@@ -72,7 +72,8 @@ def generate_launch_description():
             executable='robot_state_publisher',
             name='robot_state_publisher',
             output='screen',
-            parameters=[{'robot_description': robot_desc}]
+            parameters=[{'robot_description': robot_desc}],
+            remappings=[('/joint_states', '/sensors/proprio/body/joint_states')]
         ),
         # Node(
         #     package='joint_state_publisher_gui',
