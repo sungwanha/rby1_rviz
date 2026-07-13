@@ -25,10 +25,16 @@ find_package(std_srvs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(pinocchio REQUIRED)
+find_package(urdfdom_headers REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(trajectory_msgs REQUIRED)
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
+endif()
+
+set(RBY1_PINOCCHIO_LIBRARIES ${pinocchio_LIBRARIES})
+if(TARGET pinocchio::pinocchio)
+  set(RBY1_PINOCCHIO_LIBRARIES pinocchio::pinocchio)
 endif()
 
 # Executable
@@ -57,18 +63,20 @@ target_include_directories(teleop_ik_node PRIVATE
   include
   ${EIGEN3_INCLUDE_DIR}
   ${pinocchio_INCLUDE_DIRS}
+  ${urdfdom_headers_INCLUDE_DIRS}
 )
 target_link_libraries(teleop_ik_node
-  ${pinocchio_LIBRARIES}
+  ${RBY1_PINOCCHIO_LIBRARIES}
   ament_index_cpp::ament_index_cpp
 )
 target_include_directories(proprio_pose_node PRIVATE
   include
   ${EIGEN3_INCLUDE_DIR}
   ${pinocchio_INCLUDE_DIRS}
+  ${urdfdom_headers_INCLUDE_DIRS}
 )
 target_link_libraries(proprio_pose_node
-  ${pinocchio_LIBRARIES}
+  ${RBY1_PINOCCHIO_LIBRARIES}
   ament_index_cpp::ament_index_cpp
 )
 
@@ -100,13 +108,14 @@ if(BUILD_TESTING)
     include
     ${EIGEN3_INCLUDE_DIR}
     ${pinocchio_INCLUDE_DIRS}
+    ${urdfdom_headers_INCLUDE_DIRS}
   )
   ament_target_dependencies(test_pose_input_conversion
     geometry_msgs
     std_msgs
   )
   target_link_libraries(test_pose_input_conversion
-    ${pinocchio_LIBRARIES}
+    ${RBY1_PINOCCHIO_LIBRARIES}
   )
 
   ament_add_gtest(test_joint_state_utils test/test_joint_state_utils.cpp)

@@ -99,7 +99,7 @@ public:
             length = 0.0;
             if (!model_.existFrame(ee_frame)) return;
             auto current_id = model_.getFrameId(ee_frame);
-            auto joint_id = model_.frames[current_id].parent;
+            auto joint_id = model_.frames[current_id].parentJoint;
             root_joint = joint_id;
             while (joint_id > 0) {
                 length += model_.jointPlacements[joint_id].translation().norm();

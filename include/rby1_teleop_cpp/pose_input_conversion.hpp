@@ -4,7 +4,11 @@
 
 #include <Eigen/Dense>
 #include <geometry_msgs/msg/pose.hpp>
+#if __has_include(<pinocchio/spatial.hpp>)
+#include <pinocchio/spatial.hpp>
+#else
 #include <pinocchio/spatial/se3.hpp>
+#endif
 #include <std_msgs/msg/float64_multi_array.hpp>
 
 namespace rby1_teleop_cpp::pose_input {
