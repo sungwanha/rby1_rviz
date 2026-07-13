@@ -158,9 +158,44 @@ private:
     }
 
     void teleop_toggle_callback(const std::shared_ptr<std_srvs::srv::SetBool::Request> req, std::shared_ptr<std_srvs::srv::SetBool::Response> res) {
+        if (req->data && !teleop_enabled_) {
+            if (!reset_targets_to_current_fk()) {
+                teleop_enabled_ = false;
+                res->success = false;
+                res->message = "Cannot enable teleop: no /sensors/proprio/body/joint_states message received yet";
+                return;
+            }
+        }
+
         teleop_enabled_ = req->data;
         res->success = true;
         res->message = teleop_enabled_ ? "Enabled" : "Disabled";
+    }
+
+    bool reset_targets_to_current_fk() {
+        if (!has_latest_joint_state_) {
+            return false;
+        }
+
+        pinocchio::forwardKinematics(model_, data_, current_q_);
+        pinocchio::updateFramePlacements(model_, data_);
+
+        const auto head_id = model_.getFrameId("zed2i_left_camera_optical_frame");
+        const auto left_ee_id = model_.getFrameId("ee_left");
+        const auto right_ee_id = model_.getFrameId("ee_right");
+        const pinocchio::SE3& oM_head = data_.oMf[head_id];
+        const pinocchio::SE3 T_off_l = get_offset_se3(l_off_xyz_, l_off_rpy_);
+        const pinocchio::SE3 T_off_r = get_offset_se3(r_off_xyz_, r_off_rpy_);
+
+        left_pose_ = oM_head.inverse() * data_.oMf[left_ee_id] * T_off_l.inverse();
+        right_pose_ = oM_head.inverse() * data_.oMf[right_ee_id] * T_off_r.inverse();
+        smoothed_target_l_ = data_.oMf[left_ee_id];
+        smoothed_target_r_ = data_.oMf[right_ee_id];
+        has_left_ = true;
+        has_right_ = true;
+
+        RCLCPP_INFO(this->get_logger(), "Teleop targets initialized from current FK");
+        return true;
     }
 
     void update_nullspace_posture_callback(
