@@ -39,14 +39,14 @@ pose 입력 토픽은 `teleop_ik_node`의 `pose_input_mode` 파라미터로 하�
 | `pose_input_mode` | Left Topic | Right Topic | Type | Data |
 | --- | --- | --- | --- | --- |
 | `quaternion` | `/control/body/arm_left_controller/pose` | `/control/body/arm_right_controller/pose` | `geometry_msgs/msg/Pose` | position 3 + quaternion 4 |
-| `six_d` | `/control/body/arm_left_controller/pose_6d` | `/control/body/arm_right_controller/pose_6d` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:9] = [r11, r12, r13, r21, r22, r23]` |
+| `six_d` | `/control/body/arm_left_controller/pose_6d` | `/control/body/arm_right_controller/pose_6d` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:9] = [r11, r21, r31, r12, r22, r32]` |
 | `rot_vec` | `/control/body/arm_left_controller/pose_rot_vec` | `/control/body/arm_right_controller/pose_rot_vec` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:6] = [rx, ry, rz]` |
 
-trigger 입력은 pose mode와 무관하게 별도 토픽을 사용합니다. `/sensors/proprio/body/joint_states`에 `left_trigger`, `right_trigger` position이 들어오면 그 값도 계속 반영합니다.
+trigger 입력은 pose mode와 무관하게 hand controller 토픽을 사용합니다. `/sensors/proprio/hand_left/joint_states`, `/sensors/proprio/hand_right/joint_states`에 gripper joint position이 들어오면 그 값도 계속 반영합니다.
 
 | Left Topic | Right Topic | Type | Data |
 | --- | --- | --- | --- |
-| `/control/body/arm_left_controller/trigger` | `/control/body/arm_right_controller/trigger` | `std_msgs/msg/Float64` | 각 arm trajectory 끝에 `left_trigger`, `right_trigger` joint로 추가 |
+| `/control/hand_left/hand_left_controller/trigger` | `/control/hand_right/hand_right_controller/trigger` | `std_msgs/msg/Float64` | hand trajectory의 gripper joint command |
 
 null-space posture 기준 자세는 런타임에 갱신할 수 있습니다. 이 서비스는 별도 인자를 받지 않고, `teleop_ik_node`가 마지막으로 받은 `/sensors/proprio/body/joint_states`의 model joint position을 `q_nominal_`로 저장합니다.
 
@@ -58,8 +58,10 @@ ros2 service call /update_nullspace_posture std_srvs/srv/Trigger {}
 
 | Topic | Type | 설명 |
 | --- | --- | --- |
-| `/control/body/arm_left_controller/joint_trajectory` | `trajectory_msgs/msg/JointTrajectory` | 왼팔 실제 로봇 제어 명령, point `time_from_start=20ms` |
-| `/control/body/arm_right_controller/joint_trajectory` | `trajectory_msgs/msg/JointTrajectory` | 오른팔 실제 로봇 제어 명령, point `time_from_start=20ms` |
+| `/control/body/arm_left_controller/joint_trajectory` | `trajectory_msgs/msg/JointTrajectory` | 왼팔 arm joint 제어 명령, point `time_from_start=20ms` |
+| `/control/body/arm_right_controller/joint_trajectory` | `trajectory_msgs/msg/JointTrajectory` | 오른팔 arm joint 제어 명령, point `time_from_start=20ms` |
+| `/control/hand_left/hand_left_controller/joint_trajectory` | `trajectory_msgs/msg/JointTrajectory` | 왼손 gripper joint 제어 명령, point `time_from_start=20ms` |
+| `/control/hand_right/hand_right_controller/joint_trajectory` | `trajectory_msgs/msg/JointTrajectory` | 오른손 gripper joint 제어 명령, point `time_from_start=20ms` |
 | `/tf` | `tf2_msgs/msg/TFMessage` | `target_left`, `target_right` 시각화 TF |
 
 `teleop_ik_node`는 `/sensors/proprio/body/joint_states`를 publish하지 않습니다. RViz RobotModel 표시와 null-space posture 갱신은 로봇 또는 별도 시뮬레이션 노드가 publish하는 `/sensors/proprio/body/joint_states`를 기준으로 합니다.
@@ -72,12 +74,12 @@ ros2 service call /update_nullspace_posture std_srvs/srv/Trigger {}
 | --- | --- | --- |
 | `/sensors/proprio/arm_left/pose` | `geometry_msgs/msg/Pose` | position 3 + quaternion 4 |
 | `/sensors/proprio/arm_right/pose` | `geometry_msgs/msg/Pose` | position 3 + quaternion 4 |
-| `/sensors/proprio/arm_left/pose_6d` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:9] = [r11, r12, r13, r21, r22, r23]` |
-| `/sensors/proprio/arm_right/pose_6d` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:9] = [r11, r12, r13, r21, r22, r23]` |
+| `/sensors/proprio/arm_left/pose_6d` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:9] = [r11, r21, r31, r12, r22, r32]` |
+| `/sensors/proprio/arm_right/pose_6d` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:9] = [r11, r21, r31, r12, r22, r32]` |
 | `/sensors/proprio/arm_left/pose_rot_vec` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:6] = [rx, ry, rz]` |
 | `/sensors/proprio/arm_right/pose_rot_vec` | `std_msgs/msg/Float64MultiArray` | `data[0:3] = [x, y, z]`, `data[3:6] = [rx, ry, rz]` |
-| `/sensors/proprio/arm_left/trigger` | `std_msgs/msg/Float64` | `/sensors/proprio/body/joint_states`의 `left_trigger` position |
-| `/sensors/proprio/arm_right/trigger` | `std_msgs/msg/Float64` | `/sensors/proprio/body/joint_states`의 `right_trigger` position |
+| `/sensors/proprio/hand_left/trigger` | `std_msgs/msg/Float64` | `/sensors/proprio/hand_left/joint_states`의 gripper joint position |
+| `/sensors/proprio/hand_right/trigger` | `std_msgs/msg/Float64` | `/sensors/proprio/hand_right/joint_states`의 gripper joint position |
 
 ## 사용 방법
 
@@ -139,8 +141,11 @@ source install/setup.bash
 
 ```bash
 ros2 topic echo /sensors/proprio/body/joint_states --once
+ros2 topic echo /sensors/proprio/hand_left/joint_states --once
 ros2 topic info /control/body/arm_left_controller/joint_trajectory
 ros2 topic info /control/body/arm_right_controller/joint_trajectory
+ros2 topic info /control/hand_left/hand_left_controller/joint_trajectory
+ros2 topic info /control/hand_right/hand_right_controller/joint_trajectory
 ```
 
 3. 모델/정책 출력 형식에 맞춰 런치를 실행합니다. 실제 텔레옵 기본 실행은 RViz 없이 실행됩니다.
@@ -203,12 +208,12 @@ ros2 service call /toggle_teleop std_srvs/srv/SetBool "{data: false}"
 
 - `data_replay:=true`와 `sim_test:=true`는 실제 로봇 domain에서 사용하지 않습니다.
 - `use_rosbridge`는 필요 없으면 켜지 않습니다.
-- `teleop_ik_node`는 텔레옵 ON 상태에서 `/control/body/arm_left_controller/joint_trajectory`, `/control/body/arm_right_controller/joint_trajectory`로 실제 명령을 publish합니다.
+- `teleop_ik_node`는 텔레옵 ON 상태에서 arm trajectory와 hand trajectory를 각각 publish합니다.
 - 텔레옵 ON 전에 로봇 주변 안전 상태와 입력 pose 방향/스케일을 확인합니다.
 
 ## RViz 데이터 리플레이 테스트
 
-실제 로봇과 같은 ROS domain에 연결된 상태에서 테스트 pose를 보내면 `/control/body/arm_*_controller/joint_trajectory` 명령 토픽이 실제 제어기로 전달될 수 있습니다. 데이터 리플레이 테스트는 별도 `ROS_DOMAIN_ID`에서 실행합니다.
+실제 로봇과 같은 ROS domain에 연결된 상태에서 테스트 pose를 보내면 `/control/body/arm_*_controller/joint_trajectory`, `/control/hand_*/hand_*_controller/joint_trajectory` 명령 토픽이 실제 제어기로 전달될 수 있습니다. 데이터 리플레이 테스트는 별도 `ROS_DOMAIN_ID`에서 실행합니다.
 
 기본 리플레이 파일은 `data/chunk-000_ee/file-000.parquet`이고, 기본 컬럼은 `action.left_arm`, `action.right_arm`입니다. 각 arm 컬럼은 `[x, y, z, qx, qy, qz, qw, trigger]`로 해석합니다.
 

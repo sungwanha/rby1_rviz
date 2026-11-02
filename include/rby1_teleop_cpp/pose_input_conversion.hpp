@@ -33,25 +33,25 @@ inline bool fromSixD(const std_msgs::msg::Float64MultiArray& msg, pinocchio::SE3
         return false;
     }
 
-    Eigen::Vector3d row0(msg.data[3], msg.data[4], msg.data[5]);
-    Eigen::Vector3d row1(msg.data[6], msg.data[7], msg.data[8]);
+    Eigen::Vector3d col0(msg.data[3], msg.data[4], msg.data[5]);
+    Eigen::Vector3d col1(msg.data[6], msg.data[7], msg.data[8]);
 
-    if (row0.norm() < 1e-12 || row1.norm() < 1e-12) {
+    if (col0.norm() < 1e-12 || col1.norm() < 1e-12) {
         return false;
     }
 
-    row0.normalize();
-    row1 = row1 - row1.dot(row0) * row0;
-    if (row1.norm() < 1e-12) {
+    col0.normalize();
+    col1 = col1 - col1.dot(col0) * col0;
+    if (col1.norm() < 1e-12) {
         return false;
     }
-    row1.normalize();
-    const Eigen::Vector3d row2 = row0.cross(row1);
+    col1.normalize();
+    const Eigen::Vector3d col2 = col0.cross(col1);
 
     Eigen::Matrix3d rotation;
-    rotation.row(0) = row0.transpose();
-    rotation.row(1) = row1.transpose();
-    rotation.row(2) = row2.transpose();
+    rotation.col(0) = col0;
+    rotation.col(1) = col1;
+    rotation.col(2) = col2;
 
     pose = pinocchio::SE3(
         rotation,
@@ -100,11 +100,11 @@ inline std_msgs::msg::Float64MultiArray toSixD(const pinocchio::SE3& pose) {
         pose.translation().y(),
         pose.translation().z(),
         rotation(0, 0),
-        rotation(0, 1),
-        rotation(0, 2),
         rotation(1, 0),
+        rotation(2, 0),
+        rotation(0, 1),
         rotation(1, 1),
-        rotation(1, 2),
+        rotation(2, 1),
     };
     return msg;
 }

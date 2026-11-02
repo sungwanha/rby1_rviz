@@ -5,6 +5,7 @@
 #include <tf2_ros/transform_broadcaster.h>
 #include <std_srvs/srv/set_bool.hpp>
 #include <std_srvs/srv/trigger.hpp>
+#include <std_msgs/msg/float32.hpp>
 #include <std_msgs/msg/float64.hpp>
 #include <std_msgs/msg/float64_multi_array.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
@@ -123,18 +124,50 @@ public:
         tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
         pub_left_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/control/body/arm_left_controller/joint_trajectory", 10);
         pub_right_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/control/body/arm_right_controller/joint_trajectory", 10);
+        pub_left_hand_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/control/hand_left/hand_left_controller/joint_trajectory", 10);
+        pub_right_hand_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/control/hand_right/hand_right_controller/joint_trajectory", 10);
 
         joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
             "/sensors/proprio/body/joint_states", 10, std::bind(&TeleopIKNode::joint_state_callback, this, std::placeholders::_1));
+        left_hand_joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
+            "/sensors/proprio/hand_left/joint_states", 10,
+            [this](const sensor_msgs::msg::JointState::SharedPtr msg) {
+                update_hand_state(*msg, "left_trigger", left_trigger_val_, left_hand_joint_names_, left_hand_joint_positions_);
+            });
+        right_hand_joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
+            "/sensors/proprio/hand_right/joint_states", 10,
+            [this](const sensor_msgs::msg::JointState::SharedPtr msg) {
+                update_hand_state(*msg, "right_trigger", right_trigger_val_, right_hand_joint_names_, right_hand_joint_positions_);
+            });
         sub_left_trigger_ = this->create_subscription<std_msgs::msg::Float64>(
-            "/control/body/arm_left_controller/trigger", 10,
+            "/control/hand_left/hand_left_controller/trigger", 10,
             [this](const std_msgs::msg::Float64::SharedPtr msg) {
                 left_trigger_val_ = msg->data;
             });
         sub_right_trigger_ = this->create_subscription<std_msgs::msg::Float64>(
+            "/control/hand_right/hand_right_controller/trigger", 10,
+            [this](const std_msgs::msg::Float64::SharedPtr msg) {
+                right_trigger_val_ = msg->data;
+            });
+        sub_left_body_trigger_ = this->create_subscription<std_msgs::msg::Float64>(
+            "/control/body/arm_left_controller/trigger", 10,
+            [this](const std_msgs::msg::Float64::SharedPtr msg) {
+                left_trigger_val_ = msg->data;
+            });
+        sub_right_body_trigger_ = this->create_subscription<std_msgs::msg::Float64>(
             "/control/body/arm_right_controller/trigger", 10,
             [this](const std_msgs::msg::Float64::SharedPtr msg) {
                 right_trigger_val_ = msg->data;
+            });
+        sub_left_squeeze_ = this->create_subscription<std_msgs::msg::Float32>(
+            "/leader_human/master_arm_left/squeeze", 10,
+            [this](const std_msgs::msg::Float32::SharedPtr msg) {
+                left_trigger_val_ = static_cast<double>(msg->data);
+            });
+        sub_right_squeeze_ = this->create_subscription<std_msgs::msg::Float32>(
+            "/leader_human/master_arm_right/squeeze", 10,
+            [this](const std_msgs::msg::Float32::SharedPtr msg) {
+                right_trigger_val_ = static_cast<double>(msg->data);
             });
         teleop_service_ = this->create_service<std_srvs::srv::SetBool>(
             "toggle_teleop", std::bind(&TeleopIKNode::teleop_toggle_callback, this, std::placeholders::_1, std::placeholders::_2));
@@ -234,12 +267,37 @@ private:
         latest_joint_state_ = *msg;
         has_latest_joint_state_ = true;
 
-        left_trigger_val_ = rby1_teleop_cpp::joint_state::positionOr(*msg, "left_trigger", left_trigger_val_);
-        right_trigger_val_ = rby1_teleop_cpp::joint_state::positionOr(*msg, "right_trigger", right_trigger_val_);
-
         if (teleop_enabled_) return; 
         for (size_t i = 0; i < msg->name.size() && i < msg->position.size(); ++i) {
             if (joint_limits_.count(msg->name[i])) current_q_[std::get<2>(joint_limits_[msg->name[i]])] = msg->position[i];
+        }
+    }
+
+    void update_hand_state(
+        const sensor_msgs::msg::JointState& msg,
+        const std::string& default_joint_name,
+        double& trigger_value,
+        std::vector<std::string>& joint_names,
+        std::vector<double>& joint_positions) {
+        if (msg.position.empty()) {
+            return;
+        }
+
+        if (!msg.name.empty()) {
+            const size_t count = std::min(msg.name.size(), msg.position.size());
+            joint_names.assign(msg.name.begin(), msg.name.begin() + count);
+            joint_positions.assign(msg.position.begin(), msg.position.begin() + count);
+        } else {
+            joint_names = {default_joint_name};
+            joint_positions = {msg.position.front()};
+        }
+
+        trigger_value = joint_positions.front();
+        for (size_t i = 0; i < joint_names.size(); ++i) {
+            if (joint_names[i] == default_joint_name) {
+                trigger_value = joint_positions[i];
+                break;
+            }
         }
     }
 
@@ -488,10 +546,12 @@ private:
 
     void publish_joint_trajectories() {
         auto msg_l = trajectory_msgs::msg::JointTrajectory(), msg_r = trajectory_msgs::msg::JointTrajectory();
-        msg_l.header.stamp = msg_r.header.stamp = this->now();
+        auto msg_l_hand = trajectory_msgs::msg::JointTrajectory(), msg_r_hand = trajectory_msgs::msg::JointTrajectory();
+        msg_l.header.stamp = msg_r.header.stamp = msg_l_hand.header.stamp = msg_r_hand.header.stamp = this->now();
         trajectory_msgs::msg::JointTrajectoryPoint pt_l, pt_r;
-        pt_l.time_from_start.sec = pt_r.time_from_start.sec = 0;
-        pt_l.time_from_start.nanosec = pt_r.time_from_start.nanosec = 20000000;
+        trajectory_msgs::msg::JointTrajectoryPoint pt_l_hand, pt_r_hand;
+        pt_l.time_from_start.sec = pt_r.time_from_start.sec = pt_l_hand.time_from_start.sec = pt_r_hand.time_from_start.sec = 0;
+        pt_l.time_from_start.nanosec = pt_r.time_from_start.nanosec = pt_l_hand.time_from_start.nanosec = pt_r_hand.time_from_start.nanosec = 20000000;
         
         for (int i = 1; i < model_.njoints; ++i) {
             if (model_.joints[i].nq() == 1) {
@@ -500,10 +560,37 @@ private:
                 else if (model_.names[i].find("right_arm") != std::string::npos) { msg_r.joint_names.push_back(model_.names[i]); pt_r.positions.push_back(pos); }
             }
         }
-        msg_l.joint_names.push_back("left_trigger"); pt_l.positions.push_back(left_trigger_val_);
-        msg_r.joint_names.push_back("right_trigger"); pt_r.positions.push_back(right_trigger_val_);
+        fill_hand_trajectory(msg_l_hand, pt_l_hand, left_hand_joint_names_, left_hand_joint_positions_, "left_trigger", left_trigger_val_);
+        fill_hand_trajectory(msg_r_hand, pt_r_hand, right_hand_joint_names_, right_hand_joint_positions_, "right_trigger", right_trigger_val_);
         msg_l.points.push_back(pt_l); msg_r.points.push_back(pt_r);
+        msg_l_hand.points.push_back(pt_l_hand); msg_r_hand.points.push_back(pt_r_hand);
         pub_left_->publish(msg_l); pub_right_->publish(msg_r);
+        pub_left_hand_->publish(msg_l_hand); pub_right_hand_->publish(msg_r_hand);
+    }
+
+    void fill_hand_trajectory(
+        trajectory_msgs::msg::JointTrajectory& msg,
+        trajectory_msgs::msg::JointTrajectoryPoint& point,
+        const std::vector<std::string>& joint_names,
+        const std::vector<double>& joint_positions,
+        const std::string& default_joint_name,
+        double trigger_value) {
+        msg.joint_names = joint_names.empty() ? std::vector<std::string>{default_joint_name} : joint_names;
+        point.positions = joint_positions;
+        if (point.positions.size() != msg.joint_names.size()) {
+            point.positions.assign(msg.joint_names.size(), trigger_value);
+        }
+
+        bool updated_trigger_joint = false;
+        for (size_t i = 0; i < msg.joint_names.size(); ++i) {
+            if (msg.joint_names[i] == default_joint_name) {
+                point.positions[i] = trigger_value;
+                updated_trigger_joint = true;
+            }
+        }
+        if (!updated_trigger_joint && !point.positions.empty()) {
+            point.positions.front() = trigger_value;
+        }
     }
 
     void broadcast_target_tf(const std::string& p, const std::string& c, const pinocchio::SE3& pose) {
@@ -532,14 +619,22 @@ private:
     double damp_ = 1e-2;     // 특이점에서 발산을 막기 위한 Damping Factor
     
     double right_trigger_val_ = 0.0, left_trigger_val_ = 0.0;
+    std::vector<std::string> left_hand_joint_names_ = {"left_trigger"};
+    std::vector<std::string> right_hand_joint_names_ = {"right_trigger"};
+    std::vector<double> left_hand_joint_positions_ = {0.0};
+    std::vector<double> right_hand_joint_positions_ = {0.0};
     int root_joint_r_ = -1, root_joint_l_ = -1;
     double max_arm_length_r_ = 0.0, max_arm_length_l_ = 0.0;
 
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_left_, pub_right_;
+    rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_left_hand_, pub_right_hand_;
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_;
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr left_hand_joint_state_sub_, right_hand_joint_state_sub_;
     rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr sub_left_pose_, sub_right_pose_;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr sub_left_array_, sub_right_array_;
     rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr sub_left_trigger_, sub_right_trigger_;
+    rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr sub_left_body_trigger_, sub_right_body_trigger_;
+    rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr sub_left_squeeze_, sub_right_squeeze_;
     rclcpp::TimerBase::SharedPtr ik_timer_;
     rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr teleop_service_;
     rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr nullspace_posture_service_;

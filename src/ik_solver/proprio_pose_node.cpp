@@ -47,12 +47,22 @@ public:
         right_pose_6d_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/sensors/proprio/arm_right/pose_6d", 10);
         left_pose_rot_vec_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/sensors/proprio/arm_left/pose_rot_vec", 10);
         right_pose_rot_vec_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/sensors/proprio/arm_right/pose_rot_vec", 10);
-        left_trigger_pub_ = this->create_publisher<std_msgs::msg::Float64>("/sensors/proprio/arm_left/trigger", 10);
-        right_trigger_pub_ = this->create_publisher<std_msgs::msg::Float64>("/sensors/proprio/arm_right/trigger", 10);
+        left_trigger_pub_ = this->create_publisher<std_msgs::msg::Float64>("/sensors/proprio/hand_left/trigger", 10);
+        right_trigger_pub_ = this->create_publisher<std_msgs::msg::Float64>("/sensors/proprio/hand_right/trigger", 10);
 
         joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
             "/sensors/proprio/body/joint_states", 10,
             std::bind(&ProprioPoseNode::joint_state_callback, this, std::placeholders::_1));
+        left_hand_joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
+            "/sensors/proprio/hand_left/joint_states", 10,
+            [this](const sensor_msgs::msg::JointState::SharedPtr msg) {
+                publish_left_trigger(triggerFromJointState(*msg, "left_trigger", left_trigger_value_));
+            });
+        right_hand_joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
+            "/sensors/proprio/hand_right/joint_states", 10,
+            [this](const sensor_msgs::msg::JointState::SharedPtr msg) {
+                publish_right_trigger(triggerFromJointState(*msg, "right_trigger", right_trigger_value_));
+            });
 
         RCLCPP_INFO(this->get_logger(), "Proprio pose node started with URDF: %s", urdf_path.c_str());
     }
@@ -85,9 +95,6 @@ private:
         const pinocchio::SE3 right_pose = oM_head.actInv(data_.oMf[right_ee_frame_id_]) * right_offset_inv_;
 
         publish_arm_poses(left_pose, right_pose);
-        publish_triggers(
-            rby1_teleop_cpp::joint_state::positionOr(*msg, "left_trigger", left_trigger_value_),
-            rby1_teleop_cpp::joint_state::positionOr(*msg, "right_trigger", right_trigger_value_));
     }
 
     void publish_arm_poses(const pinocchio::SE3& left_pose, const pinocchio::SE3& right_pose) {
@@ -99,15 +106,30 @@ private:
         right_pose_rot_vec_pub_->publish(rby1_teleop_cpp::pose_input::toRotationVector(right_pose));
     }
 
-    void publish_triggers(double left_trigger, double right_trigger) {
-        left_trigger_value_ = left_trigger;
-        right_trigger_value_ = right_trigger;
+    double triggerFromJointState(
+        const sensor_msgs::msg::JointState& msg,
+        const std::string& default_joint_name,
+        double previous_value) const {
+        if (msg.position.empty()) {
+            return previous_value;
+        }
+        if (msg.name.empty()) {
+            return msg.position.front();
+        }
+        return rby1_teleop_cpp::joint_state::positionOr(msg, default_joint_name, msg.position.front());
+    }
 
+    void publish_left_trigger(double left_trigger) {
+        left_trigger_value_ = left_trigger;
         std_msgs::msg::Float64 left_msg;
-        std_msgs::msg::Float64 right_msg;
         left_msg.data = left_trigger_value_;
-        right_msg.data = right_trigger_value_;
         left_trigger_pub_->publish(left_msg);
+    }
+
+    void publish_right_trigger(double right_trigger) {
+        right_trigger_value_ = right_trigger;
+        std_msgs::msg::Float64 right_msg;
+        right_msg.data = right_trigger_value_;
         right_trigger_pub_->publish(right_msg);
     }
 
@@ -124,6 +146,8 @@ private:
     double right_trigger_value_ = 0.0;
 
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_;
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr left_hand_joint_state_sub_;
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr right_hand_joint_state_sub_;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr left_pose_pub_;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr right_pose_pub_;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr left_pose_6d_pub_;

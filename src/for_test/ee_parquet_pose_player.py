@@ -86,7 +86,9 @@ def quaternion_xyzw_to_rot_vec(quaternion_xyzw: Iterable[float]) -> list:
 
 def arm_pose_to_six_d_payload(pose: ArmPose) -> list:
     rotation = quaternion_xyzw_to_matrix(pose.quaternion_xyzw)
-    return pose.position + rotation[0] + rotation[1]
+    col0 = [rotation[0][0], rotation[1][0], rotation[2][0]]
+    col1 = [rotation[0][1], rotation[1][1], rotation[2][1]]
+    return pose.position + col0 + col1
 
 
 def arm_pose_to_rot_vec_payload(pose: ArmPose) -> list:

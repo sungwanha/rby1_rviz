@@ -24,16 +24,24 @@ class EeParquetPosePlayerTest(unittest.TestCase):
         self.assertEqual(right.quaternion_xyzw, [0.0, 0.0, 0.70710678, 0.70710678])
         self.assertEqual(triggers, (0.25, 0.75))
 
-    def test_six_d_payload_contains_position_and_two_rotation_rows(self):
+    def test_six_d_payload_contains_position_and_two_rotation_columns(self):
         pose = player.ArmPose(
             position=[1.0, 2.0, 3.0],
-            quaternion_xyzw=[0.0, 0.0, 0.0, 1.0],
+            quaternion_xyzw=[0.0, 0.0, 0.70710678, 0.70710678],
             trigger=0.5,
         )
 
         payload = player.arm_pose_to_six_d_payload(pose)
 
-        self.assertEqual(payload, [1.0, 2.0, 3.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0])
+        self.assertAlmostEqual(payload[0], 1.0)
+        self.assertAlmostEqual(payload[1], 2.0)
+        self.assertAlmostEqual(payload[2], 3.0)
+        self.assertAlmostEqual(payload[3], 0.0, places=7)
+        self.assertAlmostEqual(payload[4], 1.0, places=7)
+        self.assertAlmostEqual(payload[5], 0.0, places=7)
+        self.assertAlmostEqual(payload[6], -1.0, places=7)
+        self.assertAlmostEqual(payload[7], 0.0, places=7)
+        self.assertAlmostEqual(payload[8], 0.0, places=7)
 
     def test_rotation_vector_payload_contains_position_and_rot_vec(self):
         pose = player.ArmPose(

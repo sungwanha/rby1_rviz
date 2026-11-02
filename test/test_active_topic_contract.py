@@ -12,11 +12,13 @@ DISPLAY_LAUNCH = REPO_ROOT / "display.launch.py"
 
 
 class ActiveTopicContractTest(unittest.TestCase):
-    def test_active_nodes_use_body_proprio_joint_states(self):
+    def test_active_nodes_use_split_proprio_joint_states(self):
         for path in ACTIVE_FILES:
             with self.subTest(path=path.name):
                 text = path.read_text()
                 self.assertIn('"/sensors/proprio/body/joint_states"', text)
+                self.assertIn('"/sensors/proprio/hand_left/joint_states"', text)
+                self.assertIn('"/sensors/proprio/hand_right/joint_states"', text)
                 self.assertNotIn('"/joint_states"', text)
 
     def test_active_ik_node_publishes_controller_trajectories(self):
@@ -24,6 +26,8 @@ class ActiveTopicContractTest(unittest.TestCase):
 
         self.assertIn('"/control/body/arm_left_controller/joint_trajectory"', text)
         self.assertIn('"/control/body/arm_right_controller/joint_trajectory"', text)
+        self.assertIn('"/control/hand_left/hand_left_controller/joint_trajectory"', text)
+        self.assertIn('"/control/hand_right/hand_right_controller/joint_trajectory"', text)
         self.assertNotIn('"/leader/master_arm_joint_left/joint_trajectory"', text)
         self.assertNotIn('"/leader/master_arm_joint_right/joint_trajectory"', text)
 
@@ -37,8 +41,12 @@ class ActiveTopicContractTest(unittest.TestCase):
         text = README.read_text()
 
         self.assertIn("/sensors/proprio/body/joint_states", text)
+        self.assertIn("/sensors/proprio/hand_left/joint_states", text)
+        self.assertIn("/sensors/proprio/hand_right/joint_states", text)
         self.assertIn("/control/body/arm_left_controller/joint_trajectory", text)
         self.assertIn("/control/body/arm_right_controller/joint_trajectory", text)
+        self.assertIn("/control/hand_left/hand_left_controller/joint_trajectory", text)
+        self.assertIn("/control/hand_right/hand_right_controller/joint_trajectory", text)
         self.assertNotIn("/leader/master_arm_joint_left/joint_trajectory", text)
         self.assertNotIn("/leader/master_arm_joint_right/joint_trajectory", text)
 
