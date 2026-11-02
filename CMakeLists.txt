@@ -93,7 +93,7 @@ install(PROGRAMS
 install(DIRECTORY include/
   DESTINATION include
 )
-install(DIRECTORY model
+install(DIRECTORY model samples
   DESTINATION share/${PROJECT_NAME}
 )
 install(FILES
@@ -134,6 +134,11 @@ if(BUILD_TESTING)
   add_test(
     NAME test_active_topic_contract
     COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/test/test_active_topic_contract.py
+  )
+
+  add_test(
+    NAME test_sample_episode
+    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/examples/mujoco_replay/replay_episode.py --validate-only
   )
 endif()
 

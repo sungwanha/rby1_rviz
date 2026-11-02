@@ -2,6 +2,9 @@
 
 RBY1 RViz 표시와 실제 로봇용 IK 텔레옵 노드를 함께 실행하는 ROS 2 패키지입니다.
 
+다른 환경에서 실행할 수 있는 [MuJoCo + 양팔·그리퍼 리플레이 예제](examples/mujoco_replay/README.md)와
+[첫 에피소드 샘플](samples/episode_000.parquet)을 포함합니다. 샘플은 456프레임, 30 Hz, 15.2초 분량입니다.
+
 ## 실행 구조
 
 현재 설치되는 런치 파일은 `display.launch.py` 하나입니다.
